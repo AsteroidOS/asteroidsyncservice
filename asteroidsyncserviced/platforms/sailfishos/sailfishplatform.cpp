@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sailfishplatform.h"
+#include "platforms/sailfishos/sailfishplatform.h"
 
 #include "libwatchfish/musiccontroller.h"
 #include "libwatchfish/notificationmonitor.h"

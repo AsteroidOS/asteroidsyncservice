@@ -71,8 +71,8 @@ DBusInterface::DBusInterface(WatchesManager *wm, QObject *parent) : QObject(pare
 {
     m_watchesManager = wm;
 
-    QDBusConnection::sessionBus().registerService("org.starfish");
-    QDBusConnection::sessionBus().registerObject("/org/starfish/Manager", this, QDBusConnection::ExportScriptableSlots|QDBusConnection::ExportScriptableSignals);
+    QDBusConnection::sessionBus().registerService("org.asteroidsyncservice");
+    QDBusConnection::sessionBus().registerObject("/org/asteroidsyncservice/Manager", this, QDBusConnection::ExportScriptableSlots|QDBusConnection::ExportScriptableSignals);
 
     foreach (Watch *watch, m_watchesManager->watches())
         watchAdded(watch);
@@ -94,7 +94,7 @@ QList<QDBusObjectPath> DBusInterface::ListWatches()
     QList<QDBusObjectPath> ret;
 
     foreach (const QString &address, m_dbusWatches.keys())
-        ret.append(QDBusObjectPath("/org/starfish/" + address));
+        ret.append(QDBusObjectPath("/org/asteroidsyncservice/" + address));
 
     return ret;
 }
@@ -104,7 +104,7 @@ QDBusObjectPath DBusInterface::SelectedWatch()
     Watch *cur = m_watchesManager->currentWatch();
     if(cur) {
         QString address = cur->getAddress().toString().replace(":", "_");
-        return QDBusObjectPath("/org/starfish/" + address);
+        return QDBusObjectPath("/org/asteroidsyncservice/" + address);
     } else
         return QDBusObjectPath("/");
 }
@@ -122,7 +122,7 @@ void DBusInterface::watchAdded(Watch *watch)
 
     DBusWatch *dbusWatch = new DBusWatch(watch, m_watchesManager, this);
     m_dbusWatches.insert(address, dbusWatch);
-    QDBusConnection::sessionBus().registerObject("/org/starfish/" + address, dbusWatch, QDBusConnection::ExportAllContents);
+    QDBusConnection::sessionBus().registerObject("/org/asteroidsyncservice/" + address, dbusWatch, QDBusConnection::ExportAllContents);
 
     emit WatchesChanged();
 }
@@ -131,7 +131,7 @@ void DBusInterface::watchRemoved(Watch *watch)
 {
     QString address = watch->getAddress().toString().replace(":", "_");
 
-    QDBusConnection::sessionBus().unregisterObject("/org/starfish/" + address);
+    QDBusConnection::sessionBus().unregisterObject("/org/asteroidsyncservice/" + address);
     m_dbusWatches.remove(address);
 
     emit WatchesChanged();

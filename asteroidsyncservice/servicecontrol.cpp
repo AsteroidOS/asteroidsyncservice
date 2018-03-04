@@ -34,7 +34,7 @@ ServiceControl::ServiceControl(QObject *parent) : QObject(parent),
 {
     systemd->call("Subscribe");
 
-    QDBusReply<QDBusObjectPath> unit = systemd->call("LoadUnit", STARFISHD_SYSTEMD_UNIT);
+    QDBusReply<QDBusObjectPath> unit = systemd->call("LoadUnit", SYNCSERVICED_SYSTEMD_UNIT);
     if (unit.isValid()) {
         unitPath = unit.value();
 
@@ -75,13 +75,13 @@ bool ServiceControl::setServiceRunning(bool running)
 bool ServiceControl::startService()
 {
     QDBusError reply;
-    systemd->call("EnableUnitFiles", QStringList() << STARFISHD_SYSTEMD_UNIT, false, true);
+    systemd->call("EnableUnitFiles", QStringList() << SYNCSERVICED_SYSTEMD_UNIT, false, true);
     if (reply.isValid()) {
         qWarning() << reply.message();
         return false;
     } else {
         systemd->call("Reload");
-        systemd->call("StartUnit", STARFISHD_SYSTEMD_UNIT, "replace");
+        systemd->call("StartUnit", SYNCSERVICED_SYSTEMD_UNIT, "replace");
         return true;
     }
 }
@@ -89,8 +89,8 @@ bool ServiceControl::startService()
 bool ServiceControl::stopService()
 {
     QDBusError reply;
-    systemd->call("StopUnit", STARFISHD_SYSTEMD_UNIT, "replace");
-    systemd->call("DisableUnitFiles", QStringList() << STARFISHD_SYSTEMD_UNIT, false);
+    systemd->call("StopUnit", SYNCSERVICED_SYSTEMD_UNIT, "replace");
+    systemd->call("DisableUnitFiles", QStringList() << SYNCSERVICED_SYSTEMD_UNIT, false);
     if (reply.isValid()) {
         qWarning() << reply.message();
         return false;

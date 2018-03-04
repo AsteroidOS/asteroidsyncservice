@@ -23,7 +23,7 @@
 #include <QDBusInterface>
 #include <QObject>
 
-static const QString STARFISHD_SYSTEMD_UNIT("starfishd.service");
+static const QString SYNCSERVICED_SYSTEMD_UNIT("asteroidsyncserviced.service");
 
 class ServiceControl : public QObject
 {

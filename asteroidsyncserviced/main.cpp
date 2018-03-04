@@ -17,38 +17,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.2
-import Sailfish.Silica 1.0
+#include <QCoreApplication>
+#include "dbusinterface.h"
+#include "watchesmanager.h"
 
-Page {
-    id: loadingComponent
-    property bool wantConnect: true
+#include "platforms/sailfishos/sailfishplatform.h"
 
-    Column {
-        width: parent.width
+Q_DECL_EXPORT int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
 
-        PageHeader {
-            title: "Starfish"
-        }
+    WatchesManager *watchesManager = new WatchesManager();
+    SailfishPlatform *platform = new SailfishPlatform(watchesManager);
+    DBusInterface *dbusInterface = new DBusInterface(watchesManager);
 
-        Label {
-            width: parent.width
-            horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: Theme.fontSizeLarge
-            text: qsTr("Connecting...")
-        }
-
-        Button {
-            text: qsTr("Restart Service")
-            onClicked: starfish.initService()
-            width: parent.width
-        }
-    }
-
-    BusyIndicator {
-        size: BusyIndicatorSize.Large
-        anchors.centerIn: parent
-        running: !watches.connectedToService && loadingComponent.status === PageStatus.Active && wantConnect
-    }
+    return a.exec();
 }
-

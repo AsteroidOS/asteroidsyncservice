@@ -31,7 +31,7 @@ class Watch;
 class DBusWatch: public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.starfish.Watch")
+    Q_CLASSINFO("D-Bus Interface", "org.asteroidsyncservice.Watch")
 public:
     DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent);
 
@@ -64,7 +64,7 @@ private:
 class DBusInterface : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.starfish.Manager")
+    Q_CLASSINFO("D-Bus Interface", "org.asteroidsyncservice.Manager")
 
 public:
     explicit DBusInterface(WatchesManager *wm, QObject *parent = 0);

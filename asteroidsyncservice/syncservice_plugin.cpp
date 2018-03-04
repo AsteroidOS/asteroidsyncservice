@@ -17,20 +17,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QCoreApplication>
-#include "dbusinterface.h"
-#include "sailfishplatform.h"
-#include "watchesmanager.h"
+#include "syncservice_plugin.h"
 
-Q_DECL_EXPORT int main(int argc, char *argv[])
+#include <QtQml>
+
+#include "servicecontrol.h"
+#include "watches.h"
+#include "watch.h"
+
+SyncServicePlugin::SyncServicePlugin(QObject *parent) : QQmlExtensionPlugin(parent)
+{ }
+
+void SyncServicePlugin::registerTypes(const char *uri)
 {
-    QCoreApplication a(argc, argv);
+    Q_ASSERT(uri == QLatin1String("org.asteroid.syncservice"));
 
-    QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
-
-    WatchesManager *watchesManager = new WatchesManager();
-    SailfishPlatform *platform = new SailfishPlatform(watchesManager);
-    DBusInterface *dbusInterface = new DBusInterface(watchesManager);
-
-    return a.exec();
+    qmlRegisterUncreatableType<Watch>(uri, 1, 0, "Watch", "Get them from the model");
+    qmlRegisterType<Watches>(uri, 1, 0, "Watches");
+    qmlRegisterType<ServiceControl>(uri, 1, 0, "ServiceController");
 }
+

@@ -27,26 +27,26 @@
 #include <QDBusServiceWatcher>
 #include <algorithm>
 
-#define STARFISH_SERVICE QStringLiteral("org.starfish")
-#define STARFISH_MANAGER_PATH QStringLiteral("/org/starfish/Manager")
-#define STARFISH_MANAGER_INTERFACE QStringLiteral("org.starfish.Manager")
+#define SYNCSERVICE_SERVICE QStringLiteral("org.asteroidsyncservice")
+#define SYNCSERVICE_MANAGER_PATH QStringLiteral("/org/asteroidsyncservice/Manager")
+#define SYNCSERVICE_MANAGER_INTERFACE QStringLiteral("org.asteroidsyncservice.Manager")
 
 Watches::Watches(QObject *parent) : QAbstractListModel(parent), m_selectedWatch(-1)
 {
     refreshWatches();
     refreshSelectedWatch();
     refreshSelectedWatchConnected();
-    m_watcher = new QDBusServiceWatcher(STARFISH_SERVICE, QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForOwnerChange, this);
-    QDBusConnection::sessionBus().connect(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE, "WatchesChanged", this, SLOT(refreshWatches()));
-    QDBusConnection::sessionBus().connect(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE, "SelectedWatchChanged", this, SLOT(refreshSelectedWatch()));
-    QDBusConnection::sessionBus().connect(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE, "SelectedWatchConnectedChanged", this, SLOT(refreshSelectedWatchConnected()));
+    m_watcher = new QDBusServiceWatcher(SYNCSERVICE_SERVICE, QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForOwnerChange, this);
+    QDBusConnection::sessionBus().connect(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE, "WatchesChanged", this, SLOT(refreshWatches()));
+    QDBusConnection::sessionBus().connect(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE, "SelectedWatchChanged", this, SLOT(refreshSelectedWatch()));
+    QDBusConnection::sessionBus().connect(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE, "SelectedWatchConnectedChanged", this, SLOT(refreshSelectedWatchConnected()));
     connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, [this]() {
         refreshWatches();
         refreshSelectedWatch();
         refreshSelectedWatchConnected();
-        QDBusConnection::sessionBus().connect(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE, "WatchesChanged", this, SLOT(refreshWatches()));
-        QDBusConnection::sessionBus().connect(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE, "SelectedWatchChanged", this, SLOT(refreshSelectedWatch()));
-        QDBusConnection::sessionBus().connect(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE, "SelectedWatchConnectedChanged", this, SLOT(refreshSelectedWatchConnected()));
+        QDBusConnection::sessionBus().connect(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE, "WatchesChanged", this, SLOT(refreshWatches()));
+        QDBusConnection::sessionBus().connect(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE, "SelectedWatchChanged", this, SLOT(refreshSelectedWatch()));
+        QDBusConnection::sessionBus().connect(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE, "SelectedWatchConnectedChanged", this, SLOT(refreshSelectedWatchConnected()));
     });
     connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, [this]() {
         beginResetModel();
@@ -92,9 +92,9 @@ bool Watches::connectedToService()
 
 QString Watches::version() const
 {
-    QDBusInterface iface(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE);
+    QDBusInterface iface(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE);
     if (!iface.isValid()) {
-        qWarning() << "Could not connect to starfishd.";
+        qWarning() << "Could not connect to asteroidsyncserviced.";
         return QString();
     }
     QDBusMessage reply = iface.call("Version");
@@ -128,9 +128,9 @@ int Watches::find(const QString &address) const
 
 void Watches::refreshWatches()
 {
-    QDBusInterface iface(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE);
+    QDBusInterface iface(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE);
     if (!iface.isValid()) {
-        qWarning() << "Could not connect to starfishd.";
+        qWarning() << "Could not connect to asteroidsyncserviced.";
         return;
     }
     QDBusMessage reply = iface.call("ListWatches");
@@ -190,9 +190,9 @@ void Watches::refreshWatches()
 
 void Watches::refreshSelectedWatch()
 {
-    QDBusInterface iface(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE);
+    QDBusInterface iface(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE);
     if (!iface.isValid()) {
-        qWarning() << "Could not connect to starfishd.";
+        qWarning() << "Could not connect to asteroidsyncserviced.";
         return;
     }
     QDBusMessage reply = iface.call("SelectedWatch");
@@ -215,9 +215,9 @@ void Watches::refreshSelectedWatch()
 
 void Watches::refreshSelectedWatchConnected()
 {
-    QDBusInterface iface(STARFISH_SERVICE, STARFISH_MANAGER_PATH, STARFISH_MANAGER_INTERFACE);
+    QDBusInterface iface(SYNCSERVICE_SERVICE, SYNCSERVICE_MANAGER_PATH, SYNCSERVICE_MANAGER_INTERFACE);
     if (!iface.isValid()) {
-        qWarning() << "Could not connect to starfishd.";
+        qWarning() << "Could not connect to asteroidsyncserviced.";
         return;
     }
     QDBusMessage reply = iface.call("SelectedWatch");

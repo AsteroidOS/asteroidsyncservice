@@ -24,7 +24,7 @@
 
 Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_path(path)
 {
-    m_iface = new QDBusInterface("org.starfish", path.path(), "org.starfish.Watch", QDBusConnection::sessionBus(), this);
+    m_iface = new QDBusInterface("org.asteroidsyncservice", path.path(), "org.asteroidsyncservice.Watch", QDBusConnection::sessionBus(), this);
 
     dataChanged();
 }
