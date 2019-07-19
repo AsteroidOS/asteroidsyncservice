@@ -18,10 +18,10 @@
  */
 
 #include <QCoreApplication>
-#include "dbusinterface.h"
-#include "watchesmanager.h"
+#include "../../dbusinterface.h"
+#include "../../watchesmanager.h"
 
-#include "platforms/sailfishos/sailfishplatform.h"
+#include "sailfishplatform.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
