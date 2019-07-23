@@ -7,3 +7,7 @@ asteroidsyncserviced is a daemon relying on libasteroid to synchronize data from
 
 To build asteroidsyncservice, all submodules must be loaded.  
    `git submodule update --init`
+
+Current qmake build configurations:
+  - Starfish: CONFIG+=starfish
+  - Telescope: CONFIG+=telescope

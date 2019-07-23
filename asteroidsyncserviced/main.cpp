@@ -21,14 +21,24 @@
 #include "dbusinterface.h"
 #include "watchesmanager.h"
 
+#ifdef UBUNTU_TOUCH_PLATFORM
+#include "platforms/ubuntutouch/ubuntuplatform.h"
+#elif SAILFISHOS_PLATFORM
 #include "platforms/sailfishos/sailfishplatform.h"
+#else
+#error no platform being selected
+#endif
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
     WatchesManager *watchesManager = new WatchesManager();
-    SailfishPlatform *platform = new SailfishPlatform(watchesManager);
+    #ifdef UBUNTU_TOUCH_PLATFORM
+      UbuntuPlatform *platform = new UbuntuPlatform(watchesManager);
+    #elif SAILFISHOS_PLATFORM
+      SailfishPlatform *platform = new SailfishPlatform(watchesManager);
+    #endif
     DBusInterface *dbusInterface = new DBusInterface(watchesManager);
 
     return a.exec();
