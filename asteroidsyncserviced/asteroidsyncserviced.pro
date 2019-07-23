@@ -1,8 +1,6 @@
 QT += core bluetooth dbus
 QT -= gui
 
-SUBDIRS += libwatchfish
-
 include(../version.pri)
 include(libasteroid/libasteroid.pri)
 

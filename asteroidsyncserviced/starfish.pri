@@ -1,5 +1,7 @@
 WATCHFISH_FEATURES = notificationmonitor walltime music
 
+SUBDIRS += libwatchfish
+
 PKGCONFIG += qt5-boostable
 
 SOURCES += platforms/sailfishos/main.cpp \
