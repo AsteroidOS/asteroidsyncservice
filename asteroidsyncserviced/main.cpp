@@ -18,17 +18,28 @@
  */
 
 #include <QCoreApplication>
-#include "../../dbusinterface.h"
-#include "../../watchesmanager.h"
+#include "dbusinterface.h"
+#include "watchesmanager.h"
 
-#include "sailfishplatform.h"
+#if UBUNTU_TOUCH_PLATFORM
+#include "platforms/ubuntutouch/ubuntuplatform.h"
+#endif
+
+#if SAILFISHOS_PLATFORM
+#include "platforms/sailfishos/sailfishplatform.h"
+#endif
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
     WatchesManager *watchesManager = new WatchesManager();
-    SailfishPlatform *platform = new SailfishPlatform(watchesManager);
+    #if UBUNTU_TOUCH_PLATFORM
+      UbuntuPlatform *platform = new UbuntuPlatform(watchesManager);
+    #endif    
+    #if SAILFISHOS_PLATFORM
+      SailfishPlatform *platform = new SailfishPlatform(watchesManager);
+    #endif
     DBusInterface *dbusInterface = new DBusInterface(watchesManager);
 
     return a.exec();

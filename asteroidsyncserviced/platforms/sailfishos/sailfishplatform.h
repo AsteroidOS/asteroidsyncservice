@@ -22,9 +22,9 @@
 
 #include <QDBusContext>
 
-#include "libwatchfish/musiccontroller.h"
-#include "libwatchfish/notificationmonitor.h"
-#include "libwatchfish/walltimemonitor.h"
+#include "../../libwatchfish/musiccontroller.h"
+#include "../../libwatchfish/notificationmonitor.h"
+#include "../../libwatchfish/walltimemonitor.h"
 
 #include <libasteroid/services/mediaservice.h>
 #include <libasteroid/services/notificationservice.h>

@@ -1,5 +1,5 @@
+DEFINES += UBUNTU_TOUCH_PLATFORM
 
-SOURCES += platforms/ubuntutouch/main.cpp \
-    platforms/ubuntutouch/ubuntuplatform.cpp
+SOURCES += platforms/ubuntutouch/ubuntuplatform.cpp
 
 HEADERS += platforms/ubuntutouch/ubuntuplatform.h 

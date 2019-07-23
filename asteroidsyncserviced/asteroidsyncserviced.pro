@@ -18,7 +18,8 @@ contains(CONFIG, starfish) {
     include(starfish.pri)
 }
 
-SOURCES += watchesmanager.cpp \
+SOURCES += main.cpp \
+    watchesmanager.cpp \
     dbusinterface.cpp \
     bluez/bluezclient.cpp \
     bluez/bluez_agentmanager1.cpp \
