@@ -220,9 +220,9 @@ void Watches::refreshSelectedWatchConnected()
         qWarning() << "Could not connect to asteroidsyncserviced.";
         return;
     }
-    QDBusMessage reply = iface.call("SelectedWatch");
+    QDBusMessage reply = iface.call("SelectedWatchConnected");
     if (reply.type() == QDBusMessage::ErrorMessage) {
-        qWarning() << "Error refreshing watches:" << reply.errorMessage();
+        qWarning() << "Error refreshing connected watch:" << reply.errorMessage();
         return;
     }
     if (reply.arguments().count() == 0) {
