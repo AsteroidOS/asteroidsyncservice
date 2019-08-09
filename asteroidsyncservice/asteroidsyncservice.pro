@@ -7,15 +7,21 @@ include(../version.pri)
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = org.asteroid.syncservice
 
+contains(CONFIG, telescope) {
+    include(telescope.pri)
+} 
+
+contains(CONFIG, starfish) {
+    include(starfish.pri)
+}
+
 HEADERS += \
     syncservice_plugin.h \
-    servicecontrol.h \
     watch.h \
     watches.h
 
 SOURCES += \
     syncservice_plugin.cpp \
-    servicecontrol.cpp \
     watch.cpp \
     watches.cpp
 
