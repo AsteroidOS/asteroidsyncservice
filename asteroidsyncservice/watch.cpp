@@ -61,7 +61,7 @@ void Watch::setWeatherCityName(const QString &c)
 }
 
 quint8 Watch::batteryLevel() {
-    return 100; // TODO
+    return fetchProperty("BatteryLevel").toInt();
 }
 
 QVariant Watch::fetchProperty(const QString &propertyName)
