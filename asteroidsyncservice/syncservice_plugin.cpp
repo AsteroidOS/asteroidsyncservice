@@ -21,9 +21,16 @@
 
 #include <QtQml>
 
-#include "servicecontrol.h"
 #include "watches.h"
 #include "watch.h"
+
+#ifdef UBUNTU_TOUCH_PLATFORM
+#include "platforms/ubuntutouch/servicecontrol.h"
+#elif SAILFISHOS_PLATFORM
+#include "platforms/sailfishos/servicecontrol.h"
+#else
+#error no platform being selected
+#endif
 
 SyncServicePlugin::SyncServicePlugin(QObject *parent) : QQmlExtensionPlugin(parent)
 { }
