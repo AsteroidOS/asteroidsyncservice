@@ -84,3 +84,8 @@ void Watch::requestScreenshot()
 {
     m_iface->call("RequestScreenshot");
 }
+
+void Watch::setTime(QDateTime t)
+{
+    m_iface->call("SetTime", t.currentDateTime());
+}

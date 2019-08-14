@@ -32,6 +32,7 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
     m_screenshotService = wm->screenshotService();
     m_weatherService = wm->weatherService();
     m_batteryService = wm->batteryService();
+    m_timeService = wm->timeService();
     connect(m_batteryService, SIGNAL(levelChanged(quint8)), this, SIGNAL(LevelChanged(quint8)));
 }
 
@@ -63,6 +64,11 @@ void DBusWatch::RequestScreenshot()
 void DBusWatch::WeatherSetCityName(QString cityName)
 {
     m_weatherService->setCity(cityName);
+}
+
+void DBusWatch::SetTime(QDateTime t)
+{
+    m_timeService->setTime(t);
 }
 
 /* Manager Interface */

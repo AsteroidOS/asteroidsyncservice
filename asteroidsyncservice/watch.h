@@ -21,6 +21,7 @@
 #define WATCH_H
 
 #include <QObject>
+#include <QDateTime>
 #include <QDBusInterface>
 
 class Watch : public QObject
@@ -41,6 +42,8 @@ public:
 
     QString weatherCityName();
     quint8 batteryLevel();
+    
+    Q_INVOKABLE void setTime(QDateTime t);
 
 public slots:
     void requestScreenshot();
