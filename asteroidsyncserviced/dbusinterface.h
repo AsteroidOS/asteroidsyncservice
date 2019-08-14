@@ -50,6 +50,7 @@ public slots:
     quint8 BatteryLevel();
     void RequestScreenshot();
     void WeatherSetCityName(QString cityName);
+    void SetTime(QDateTime t);
 
 private:
     Watch *m_watch;
@@ -59,6 +60,7 @@ private:
     BatteryService *m_batteryService;
     ScreenshotService *m_screenshotService;
     WeatherService *m_weatherService;
+    TimeService *m_timeService;
 };
 
 class DBusInterface : public QObject
