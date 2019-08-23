@@ -41,6 +41,7 @@ signals:
 
     void LevelChanged(quint8);
     void TimeServiceReady();
+    void BatteryServiceReady();
 
 public slots:
     void SelectWatch();
