@@ -62,6 +62,8 @@ private slots:
     void dataChanged();
     void timeServiceUp();
     void timeServiceDown();
+    void batteryServiceReady();
+    void batteryLevelRefresh(quint8 batLvl);
 
 private:
     QDBusObjectPath m_path;
@@ -69,8 +71,8 @@ private:
     QString m_address;
     QString m_name;
     QDBusInterface *m_iface;
-    
     bool m_timeServiceReady = false;
+    qint8 m_batteryLevel = 0;
 };
 
 #endif // WATCH_H

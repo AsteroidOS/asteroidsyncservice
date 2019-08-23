@@ -27,6 +27,8 @@ Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_
     m_iface = new QDBusInterface("org.asteroidsyncservice", path.path(), "org.asteroidsyncservice.Watch", QDBusConnection::sessionBus(), this);
     connect(m_iface, SIGNAL(TimeServiceReady()), this, SLOT(timeServiceUp()));
     connect(m_iface, SIGNAL(Disconnected()), this, SLOT(timeServiceDown()));
+    connect(m_iface, SIGNAL(BatteryServiceReady()), this, SLOT(batteryServiceReady()));
+    connect(m_iface, SIGNAL(LevelChanged(quint8)), this, SLOT(batteryLevelRefresh(quint8)));
     
     dataChanged();
 }
@@ -63,7 +65,7 @@ void Watch::setWeatherCityName(const QString &c)
 }
 
 quint8 Watch::batteryLevel() {
-    return fetchProperty("BatteryLevel").toInt();
+    return m_batteryLevel;
 }
 
 QVariant Watch::fetchProperty(const QString &propertyName)
@@ -80,6 +82,7 @@ void Watch::dataChanged()
 {
     m_name = fetchProperty("Name").toString();
     m_address = fetchProperty("Address").toString();
+    m_batteryLevel = fetchProperty("BatteryLevel").toInt();
 }
 
 void Watch::requestScreenshot()
@@ -110,5 +113,22 @@ void Watch::timeServiceDown()
     if(m_timeServiceReady) {
         m_timeServiceReady = false;
         emit timeServiceChanged();
+    }
+}
+
+void Watch::batteryServiceReady()
+{
+    quint8 batLvl = fetchProperty("BatteryLevel").toInt();
+    if(batLvl !=  m_batteryLevel) {
+        m_batteryLevel = batLvl;
+        emit batteryLevelChanged();
+    }
+}
+
+void Watch::batteryLevelRefresh(quint8 batLvl)
+{
+    if(batLvl != m_batteryLevel) {
+        m_batteryLevel = batLvl;
+        emit batteryLevelChanged();
     }
 }
