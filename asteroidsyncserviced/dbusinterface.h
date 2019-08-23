@@ -40,6 +40,7 @@ signals:
     void Disconnected();
 
     void LevelChanged(quint8);
+    void TimeServiceReady();
 
 public slots:
     void SelectWatch();
