@@ -30,6 +30,7 @@ class Watch : public QObject
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString weatherCityName READ weatherCityName WRITE setWeatherCityName NOTIFY weatherCityNameChanged)
     Q_PROPERTY(quint8 batteryLevel READ batteryLevel NOTIFY batteryLevelChanged)
+    Q_PROPERTY(bool timeServiceReady READ timeServiceReady NOTIFY timeServiceChanged)
 
 public:
     explicit Watch(const QDBusObjectPath &path, QObject *parent = 0);
@@ -42,7 +43,7 @@ public:
 
     QString weatherCityName();
     quint8 batteryLevel();
-    
+    bool timeServiceReady();
     Q_INVOKABLE void setTime(QDateTime t);
 
 public slots:
@@ -52,12 +53,15 @@ public slots:
 signals:
     void weatherCityNameChanged();
     void batteryLevelChanged();
+    void timeServiceChanged();
 
 private:
     QVariant fetchProperty(const QString &propertyName);
 
 private slots:
     void dataChanged();
+    void timeServiceUp();
+    void timeServiceDown();
 
 private:
     QDBusObjectPath m_path;
@@ -65,6 +69,8 @@ private:
     QString m_address;
     QString m_name;
     QDBusInterface *m_iface;
+    
+    bool m_timeServiceReady = false;
 };
 
 #endif // WATCH_H

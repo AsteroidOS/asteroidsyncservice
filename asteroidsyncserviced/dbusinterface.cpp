@@ -33,7 +33,10 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
     m_weatherService = wm->weatherService();
     m_batteryService = wm->batteryService();
     m_timeService = wm->timeService();
+    
     connect(m_batteryService, SIGNAL(levelChanged(quint8)), this, SIGNAL(LevelChanged(quint8)));
+    connect(m_timeService, SIGNAL(ready()), this, SIGNAL(TimeServiceReady()));
+    connect(wm, SIGNAL(disconnected()), this, SIGNAL(Disconnected()));
 }
 
 void DBusWatch::SelectWatch()

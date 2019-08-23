@@ -25,7 +25,9 @@
 Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_path(path)
 {
     m_iface = new QDBusInterface("org.asteroidsyncservice", path.path(), "org.asteroidsyncservice.Watch", QDBusConnection::sessionBus(), this);
-
+    connect(m_iface, SIGNAL(TimeServiceReady()), this, SLOT(timeServiceUp()));
+    connect(m_iface, SIGNAL(Disconnected()), this, SLOT(timeServiceDown()));
+    
     dataChanged();
 }
 
@@ -88,4 +90,25 @@ void Watch::requestScreenshot()
 void Watch::setTime(QDateTime t)
 {
     m_iface->call("SetTime", t.currentDateTime());
+}
+
+bool Watch::timeServiceReady()
+{
+    return m_timeServiceReady;
+}
+
+void Watch::timeServiceUp()
+{
+    if(!m_timeServiceReady) {
+        m_timeServiceReady = true;
+        emit timeServiceChanged();
+    }
+}
+
+void Watch::timeServiceDown()
+{
+    if(m_timeServiceReady) {
+        m_timeServiceReady = false;
+        emit timeServiceChanged();
+    }
 }
