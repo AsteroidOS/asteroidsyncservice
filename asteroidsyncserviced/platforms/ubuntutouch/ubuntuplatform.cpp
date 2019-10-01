@@ -1,5 +1,7 @@
 #include "ubuntuplatform.h"
 
+#include <stdlib.h>
+#include <time.h>
 #include <QDBusConnection>
 #include <QDBusMetaType>
 #include <QDBusReply>
@@ -12,17 +14,62 @@
 
 UbuntuPlatform::UbuntuPlatform(WatchesManager *wm, QObject *parent) : QObject(parent)
 {
-    qDBusRegisterMetaType<QList<QVariantMap>>();
-
-    m_timeService = wm->timeService();
+    // initialize random seed
+    std::srand (time(NULL));
+    m_notificationService = wm->notificationService();
+    // Notifications
+    QDBusConnection::sessionBus().registerObject("/org/freedesktop/Notifications", this, QDBusConnection::ExportAllSlots);
+    m_iface = new QDBusInterface("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus");
+    m_iface->call("AddMatch", "interface='org.freedesktop.Notifications',member='Notify',type='method_call',eavesdrop='true'");
 }
 
 UbuntuPlatform::~UbuntuPlatform()
 {
 }
 
-void UbuntuPlatform::onTimeChanged() {
-    m_timeService->setTime(QDateTime());
+QDBusInterface *UbuntuPlatform::interface() const
+{
+    return m_iface;
+}
+
+uint UbuntuPlatform::Notify(const QString &app_name, uint replaces_id, const QString &app_icon, const QString &summary, const QString &body, const QStringList &actions, const QVariantHash &hints, int expire_timeout)
+{
+    QStringList hiddenNotifications = {"indicator-sound", "indicator-network"};
+    if (!hiddenNotifications.contains(app_name)) {
+        if (hints.contains("x-canonical-secondary-icon") && hints.value("x-canonical-secondary-icon").toString() == "incoming-call") {
+            qDebug() << "Have a phone call notification. Ignoring it..." << app_name << app_icon;
+        } else {
+            unsigned int randId = rand() % 100000 + 1;
+            m_notificationService->insertNotification("", randId, encodeAppName(app_name), encodeIcon(app_name), summary, body, NotificationService::Normal);
+        }
+    }
+    return 0;
+}
+
+QString UbuntuPlatform::encodeIcon(const QString appName) const
+{
+    if(appName.contains("dekko"))
+        return "ios-mail";
+    else if(appName.contains("teleports"))
+        return "ios-paper-plane";
+	else if(appName.contains("indicator-datetime"))
+		return "ios-alarm";
+    else
+        return "logo-tux";
+}
+
+QString UbuntuPlatform::encodeAppName(const QString appName) const
+{
+    if(appName.contains("dekko"))
+        return "Dekko 2";
+    else if(appName.contains("teleports"))
+        return "TELEports";
+    else if(appName.contains("fluffychat"))
+        return "FluffyChat";
+	else if(appName.contains("indicator-datetime"))
+		return "Alarm";
+    else
+        return "unkown";
 }
 
 void UbuntuPlatform::updateMusicStatus()
