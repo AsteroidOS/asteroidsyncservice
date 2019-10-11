@@ -42,6 +42,7 @@ signals:
     void LevelChanged(quint8);
     void TimeServiceReady();
     void BatteryServiceReady();
+    void NotificationServiceReady();
 
 public slots:
     void SelectWatch();
@@ -53,6 +54,7 @@ public slots:
     void RequestScreenshot();
     void WeatherSetCityName(QString cityName);
     void SetTime(QDateTime t);
+    void SetVibration(QString v);
 
 private:
     Watch *m_watch;
@@ -63,6 +65,7 @@ private:
     ScreenshotService *m_screenshotService;
     WeatherService *m_weatherService;
     TimeService *m_timeService;
+    NotificationService *m_notificationService;
 };
 
 class DBusInterface : public QObject

@@ -33,10 +33,12 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
     m_weatherService = wm->weatherService();
     m_batteryService = wm->batteryService();
     m_timeService = wm->timeService();
+    m_notificationService = wm->notificationService();
 
     connect(m_batteryService, SIGNAL(ready()), this, SIGNAL(BatteryServiceReady()));    
     connect(m_batteryService, SIGNAL(levelChanged(quint8)), this, SIGNAL(LevelChanged(quint8)));
     connect(m_timeService, SIGNAL(ready()), this, SIGNAL(TimeServiceReady()));
+    connect(m_notificationService, SIGNAL(ready()), this, SIGNAL(NotificationServiceReady()));
     connect(wm, SIGNAL(disconnected()), this, SIGNAL(Disconnected()));
 }
 
@@ -73,6 +75,11 @@ void DBusWatch::WeatherSetCityName(QString cityName)
 void DBusWatch::SetTime(QDateTime t)
 {
     m_timeService->setTime(t);
+}
+
+void DBusWatch::SetVibration(QString v)
+{
+    m_notificationService->setVibration(v);
 }
 
 /* Manager Interface */

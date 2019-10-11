@@ -31,6 +31,7 @@ class Watch : public QObject
     Q_PROPERTY(QString weatherCityName READ weatherCityName WRITE setWeatherCityName NOTIFY weatherCityNameChanged)
     Q_PROPERTY(quint8 batteryLevel READ batteryLevel NOTIFY batteryLevelChanged)
     Q_PROPERTY(bool timeServiceReady READ timeServiceReady NOTIFY timeServiceChanged)
+    Q_PROPERTY(bool notificationServiceReady READ notificationServiceReady NOTIFY notificationServiceChanged)
 
 public:
     explicit Watch(const QDBusObjectPath &path, QObject *parent = 0);
@@ -45,6 +46,8 @@ public:
     quint8 batteryLevel();
     bool timeServiceReady();
     Q_INVOKABLE void setTime(QDateTime t);
+    bool notificationServiceReady();
+    Q_INVOKABLE void setVibration(QString v);
 
 public slots:
     void requestScreenshot();
@@ -54,6 +57,7 @@ signals:
     void weatherCityNameChanged();
     void batteryLevelChanged();
     void timeServiceChanged();
+    void notificationServiceChanged();
 
 private:
     QVariant fetchProperty(const QString &propertyName);
@@ -61,9 +65,10 @@ private:
 private slots:
     void dataChanged();
     void timeServiceUp();
-    void timeServiceDown();
+    void serviceDown();
     void batteryServiceReady();
     void batteryLevelRefresh(quint8 batLvl);
+    void notifyServiceUp();
 
 private:
     QDBusObjectPath m_path;
@@ -73,6 +78,7 @@ private:
     QDBusInterface *m_iface;
     bool m_timeServiceReady = false;
     qint8 m_batteryLevel = 0;
+    bool m_notificationServiceReady = false;
 };
 
 #endif // WATCH_H
