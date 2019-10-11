@@ -26,7 +26,8 @@ Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_
 {
     m_iface = new QDBusInterface("org.asteroidsyncservice", path.path(), "org.asteroidsyncservice.Watch", QDBusConnection::sessionBus(), this);
     connect(m_iface, SIGNAL(TimeServiceReady()), this, SLOT(timeServiceUp()));
-    connect(m_iface, SIGNAL(Disconnected()), this, SLOT(timeServiceDown()));
+    connect(m_iface, SIGNAL(NotificationServiceReady()), this, SLOT(notifyServiceUp()));
+    connect(m_iface, SIGNAL(Disconnected()), this, SLOT(serviceDown()));
     connect(m_iface, SIGNAL(BatteryServiceReady()), this, SLOT(batteryServiceReady()));
     connect(m_iface, SIGNAL(LevelChanged(quint8)), this, SLOT(batteryLevelRefresh(quint8)));
     
@@ -108,11 +109,15 @@ void Watch::timeServiceUp()
     }
 }
 
-void Watch::timeServiceDown()
+void Watch::serviceDown()
 {
     if(m_timeServiceReady) {
         m_timeServiceReady = false;
         emit timeServiceChanged();
+    }
+    if(m_notificationServiceReady) {
+        m_notificationServiceReady = false;
+        emit notificationServiceChanged();
     }
 }
 
@@ -131,4 +136,22 @@ void Watch::batteryLevelRefresh(quint8 batLvl)
         m_batteryLevel = batLvl;
         emit batteryLevelChanged();
     }
+}
+
+bool Watch::notificationServiceReady()
+{
+    return m_notificationServiceReady;
+}
+
+void Watch::notifyServiceUp()
+{
+    if(!m_notificationServiceReady) {
+        m_notificationServiceReady = true;
+        emit notificationServiceChanged();
+    }
+}
+
+void Watch::setVibration(QString v)
+{
+    m_iface->call("SetVibration", v);
 }
