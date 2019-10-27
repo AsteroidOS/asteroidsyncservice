@@ -52,6 +52,7 @@ uint UbuntuPlatform::Notify(const QString &app_name, uint replaces_id, const QSt
             qDebug() << __func__ << "Service not ready";
         }
     }
+    setDelayedReply(true);
     return 0;
 }
 
