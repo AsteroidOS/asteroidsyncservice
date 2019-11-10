@@ -30,6 +30,8 @@
 #include "bluez_adapter1.h"
 #include "bluez_agentmanager1.h"
 
+#define NOTIF_UUID "00009071-0000-0000-0000-00a57e401d05"
+
 class Device {
 public:
     QBluetoothAddress address;
@@ -56,6 +58,7 @@ signals:
     void devicesChanged();
 
 private:
+    bool isAsteroidOSWatch(const QStringList uuids) const;
     QDBusConnection m_dbus;
     DBusObjectManagerInterface m_bluezManager;
     BluezAdapter1 *m_bluezAdapter = nullptr;
