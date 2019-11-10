@@ -115,8 +115,9 @@ void BluezClient::addDevice(const QDBusObjectPath &path, const QVariantMap &prop
 {
     QString address = properties.value("Address").toString();
     QString name = properties.value("Name").toString();
-
-    if (!m_devices.contains(address)) { // TODO: Filter
+    QStringList uuids = properties.value("UUIDs").toStringList();
+    
+    if (!m_devices.contains(address) && isAsteroidOSWatch(uuids)) {
         Device device;
         device.address = QBluetoothAddress(address);
         device.name = name;
@@ -143,4 +144,9 @@ void BluezClient::slotInterfacesRemoved(const QDBusObjectPath &path, const QStri
         m_devices.take(path.path());
         emit devicesChanged();
     }
+}
+
+bool BluezClient::isAsteroidOSWatch(const QStringList uuids) const
+{
+    return uuids.contains(NOTIF_UUID);
 }
