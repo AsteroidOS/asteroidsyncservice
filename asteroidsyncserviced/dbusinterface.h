@@ -55,6 +55,7 @@ public slots:
     void WeatherSetCityName(QString cityName);
     void SetTime(QDateTime t);
     void SetVibration(QString v);
+    void SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary);
 
 private:
     Watch *m_watch;
