@@ -82,6 +82,12 @@ void DBusWatch::SetVibration(QString v)
     m_notificationService->setVibration(v);
 }
 
+void DBusWatch::SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary)
+{
+    m_notificationService->insertNotification("", id, appName, icon, body, summary, NotificationService::Strong);
+}
+
+
 /* Manager Interface */
 
 DBusInterface::DBusInterface(WatchesManager *wm, QObject *parent) : QObject(parent)

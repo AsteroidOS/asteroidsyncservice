@@ -48,6 +48,7 @@ public:
     Q_INVOKABLE void setTime(QDateTime t);
     bool notificationServiceReady();
     Q_INVOKABLE void setVibration(QString v);
+    Q_INVOKABLE void sendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary);
 
 public slots:
     void requestScreenshot();

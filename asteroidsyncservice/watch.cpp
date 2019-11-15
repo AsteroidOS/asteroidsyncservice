@@ -155,3 +155,8 @@ void Watch::setVibration(QString v)
 {
     m_iface->call("SetVibration", v);
 }
+
+void Watch::sendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary);
+{
+    m_iface->call("SendNotify", id, appName, icon, body, summary);
+}
