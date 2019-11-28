@@ -23,6 +23,10 @@
 #include <QObject>
 #include <QDateTime>
 #include <QDBusInterface>
+#include <QBuffer>
+#include <QSaveFile>
+#include <QDir>
+#include <QFileInfo>
 
 class Watch : public QObject
 {
@@ -32,6 +36,9 @@ class Watch : public QObject
     Q_PROPERTY(quint8 batteryLevel READ batteryLevel NOTIFY batteryLevelChanged)
     Q_PROPERTY(bool timeServiceReady READ timeServiceReady NOTIFY timeServiceChanged)
     Q_PROPERTY(bool notificationServiceReady READ notificationServiceReady NOTIFY notificationServiceChanged)
+    Q_PROPERTY(bool screenshotServiceReady READ screenshotServiceReady NOTIFY screenshotServiceChanged)
+    Q_PROPERTY(unsigned int screenshotProgress READ screenshotProgress NOTIFY screenshotProgressChanged)
+    Q_PROPERTY(QString screenshotPath READ screenshotPath NOTIFY screenshotPathChanged)
 
 public:
     explicit Watch(const QDBusObjectPath &path, QObject *parent = 0);
@@ -45,6 +52,10 @@ public:
     QString weatherCityName();
     quint8 batteryLevel();
     bool timeServiceReady();
+    bool screenshotServiceReady();
+    unsigned int screenshotProgress();
+    QString screenshotPath() const;
+    Q_INVOKABLE void setScreenshotUrl(const QString url);
     Q_INVOKABLE void setTime(QDateTime t);
     bool notificationServiceReady();
     Q_INVOKABLE void setVibration(QString v);
@@ -59,14 +70,23 @@ signals:
     void batteryLevelChanged();
     void timeServiceChanged();
     void notificationServiceChanged();
+    void screenshotServiceChanged();
+    void screenshotProgressChanged();
+    void screenshotPathChanged();
 
 private:
     QVariant fetchProperty(const QString &propertyName);
+    bool createDir(const QDir path);
+    QString createScreenshotFilename(QString filename, const QString suffix);
+    QString getScreenshotDir(const QDir dir);
+    QDateTime getCurrentDateTime();
 
 private slots:
     void dataChanged();
     void batteryServiceReady();
     void batteryLevelRefresh(quint8 batLvl);
+    void screenshotTransferProgress(unsigned int progress);
+    void screenshotReceived(QByteArray data);
 
 private:
     QDBusObjectPath m_path;
@@ -75,6 +95,10 @@ private:
     QString m_name;
     QDBusInterface *m_iface;
     qint8 m_batteryLevel = 0;
+    unsigned int m_scrnProgress = 0;
+    QFileInfo m_screenshotUrl;
+    QString m_screenshotPath;
+    QString m_screenshotName;
 };
 
 #endif // WATCH_H

@@ -29,6 +29,9 @@ Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_
     connect(m_iface, SIGNAL(NotifyServiceChanged()), this, SIGNAL(notificationServiceChanged()));
     connect(m_iface, SIGNAL(BatteryServiceReady()), this, SLOT(batteryServiceReady()));
     connect(m_iface, SIGNAL(LevelChanged(quint8)), this, SLOT(batteryLevelRefresh(quint8)));
+    connect(m_iface, SIGNAL(ScreenshotServiceChanged()), this, SIGNAL(screenshotServiceChanged()));
+    connect(m_iface, SIGNAL(ProgressChanged(unsigned int)), this, SLOT(screenshotTransferProgress(unsigned int)));
+    connect(m_iface, SIGNAL(ScreenshotReceived(QByteArray)), this, SLOT(screenshotReceived(QByteArray)));
     
     dataChanged();
 }
@@ -90,6 +93,7 @@ void Watch::dataChanged()
 void Watch::requestScreenshot()
 {
     m_iface->call("RequestScreenshot");
+    m_screenshotName = createScreenshotFilename(m_screenshotUrl.fileName(), m_screenshotUrl.suffix());
 }
 
 void Watch::setTime(QDateTime t)
@@ -132,4 +136,69 @@ void Watch::setVibration(QString v)
 void Watch::sendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary)
 {
     m_iface->call("SendNotify", id, appName, icon, body, summary);
+}
+
+bool Watch::screenshotServiceReady()
+{
+    return fetchProperty("StatusScreenshotService").toBool();
+}
+
+unsigned int Watch::screenshotProgress()
+{
+    return m_scrnProgress;
+}
+
+void Watch::screenshotTransferProgress(unsigned int progress)
+{
+    m_scrnProgress = progress;
+    emit screenshotProgressChanged();
+}
+
+void Watch::screenshotReceived(QByteArray data)
+{
+    QString filePath = getScreenshotDir(m_screenshotUrl.dir()) + QDir::separator() + m_screenshotName;
+    QSaveFile file(filePath);
+    file.open(QIODevice::WriteOnly);
+    file.write(data);
+    file.commit();
+    m_screenshotPath = filePath;
+    emit screenshotPathChanged();
+}
+
+QString Watch::screenshotPath() const
+{
+    return m_screenshotPath;
+}
+
+void Watch::setScreenshotUrl(const QString url)
+{
+    QFileInfo fileInfo(url);
+    if(!createDir(fileInfo.dir()))
+        qDebug() << "Unable to create directory";
+    m_screenshotUrl = fileInfo;
+}
+
+bool Watch::createDir(const QDir path)
+{
+    if(!path.exists()) {
+        return path.mkdir(path.path());
+    } else {
+        return true;
+    }
+}
+
+QString Watch::getScreenshotDir(const QDir dir)
+{
+    return dir.path();
+}
+
+QString Watch::createScreenshotFilename(QString filename, const QString suffix)
+{
+    QString fileNameExSuffix = filename.remove(suffix);
+    return "screenshot" + getCurrentDateTime().toString(fileNameExSuffix.remove("screenshot")) + suffix;
+}
+
+QDateTime Watch::getCurrentDateTime()
+{
+    return QDateTime::currentDateTime();
 }
