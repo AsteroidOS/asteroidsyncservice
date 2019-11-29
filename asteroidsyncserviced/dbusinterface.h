@@ -37,12 +37,11 @@ public:
 
 signals:
     void Connected();
-    void Disconnected();
 
     void LevelChanged(quint8);
-    void TimeServiceReady();
+    void TimeServiceChanged();
     void BatteryServiceReady();
-    void NotificationServiceReady();
+    void NotifyServiceChanged();
 
 public slots:
     void SelectWatch();
@@ -51,11 +50,18 @@ public slots:
     QString Name() const;
 
     quint8 BatteryLevel();
+    bool StatusTimeService();
+    bool StatusNotifyService();
     void RequestScreenshot();
     void WeatherSetCityName(QString cityName);
     void SetTime(QDateTime t);
     void SetVibration(QString v);
     void SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary);
+
+private slots:
+    void TimeServiceReady();
+    void NotifyServiceReady();
+    void Disconnected();
 
 private:
     Watch *m_watch;
@@ -67,6 +73,8 @@ private:
     WeatherService *m_weatherService;
     TimeService *m_timeService;
     NotificationService *m_notificationService;
+    bool m_timeServiceReady = false;
+    bool m_notifyServiceReady = false;
 };
 
 class DBusInterface : public QObject

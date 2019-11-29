@@ -25,9 +25,8 @@
 Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_path(path)
 {
     m_iface = new QDBusInterface("org.asteroidsyncservice", path.path(), "org.asteroidsyncservice.Watch", QDBusConnection::sessionBus(), this);
-    connect(m_iface, SIGNAL(TimeServiceReady()), this, SLOT(timeServiceUp()));
-    connect(m_iface, SIGNAL(NotificationServiceReady()), this, SLOT(notifyServiceUp()));
-    connect(m_iface, SIGNAL(Disconnected()), this, SLOT(serviceDown()));
+    connect(m_iface, SIGNAL(TimeServiceChanged()), this, SLOT(statusTimeService()));
+    connect(m_iface, SIGNAL(NotifyServiceChanged()), this, SLOT(statusNotifyService()));
     connect(m_iface, SIGNAL(BatteryServiceReady()), this, SLOT(batteryServiceReady()));
     connect(m_iface, SIGNAL(LevelChanged(quint8)), this, SLOT(batteryLevelRefresh(quint8)));
     
@@ -84,6 +83,8 @@ void Watch::dataChanged()
     m_name = fetchProperty("Name").toString();
     m_address = fetchProperty("Address").toString();
     m_batteryLevel = fetchProperty("BatteryLevel").toInt();
+    statusTimeService();
+    statusNotifyService();
 }
 
 void Watch::requestScreenshot()
@@ -101,23 +102,12 @@ bool Watch::timeServiceReady()
     return m_timeServiceReady;
 }
 
-void Watch::timeServiceUp()
+void Watch::statusTimeService()
 {
-    if(!m_timeServiceReady) {
-        m_timeServiceReady = true;
+    bool timeServiceReady = fetchProperty("StatusTimeService").toBool();
+    if(timeServiceReady != m_timeServiceReady) {
+        m_timeServiceReady = timeServiceReady;
         emit timeServiceChanged();
-    }
-}
-
-void Watch::serviceDown()
-{
-    if(m_timeServiceReady) {
-        m_timeServiceReady = false;
-        emit timeServiceChanged();
-    }
-    if(m_notificationServiceReady) {
-        m_notificationServiceReady = false;
-        emit notificationServiceChanged();
     }
 }
 
@@ -143,10 +133,11 @@ bool Watch::notificationServiceReady()
     return m_notificationServiceReady;
 }
 
-void Watch::notifyServiceUp()
+void Watch::statusNotifyService()
 {
-    if(!m_notificationServiceReady) {
-        m_notificationServiceReady = true;
+    bool notificationServiceReady = fetchProperty("StatusNotifyService").toBool();
+    if(notificationServiceReady != m_notificationServiceReady) {
+        m_notificationServiceReady = notificationServiceReady;
         emit notificationServiceChanged();
     }
 }

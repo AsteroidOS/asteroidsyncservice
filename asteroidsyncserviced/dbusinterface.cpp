@@ -37,9 +37,18 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
 
     connect(m_batteryService, SIGNAL(ready()), this, SIGNAL(BatteryServiceReady()));    
     connect(m_batteryService, SIGNAL(levelChanged(quint8)), this, SIGNAL(LevelChanged(quint8)));
-    connect(m_timeService, SIGNAL(ready()), this, SIGNAL(TimeServiceReady()));
-    connect(m_notificationService, SIGNAL(ready()), this, SIGNAL(NotificationServiceReady()));
-    connect(wm, SIGNAL(disconnected()), this, SIGNAL(Disconnected()));
+    connect(m_timeService, SIGNAL(ready()), this, SLOT(TimeServiceReady()));
+    connect(m_notificationService, SIGNAL(ready()), this, SLOT(NotifyServiceReady()));
+    connect(wm, SIGNAL(disconnected()), this, SLOT(Disconnected()));
+}
+
+void DBusWatch::Disconnected()
+{
+    m_timeServiceReady = false;
+    emit TimeServiceChanged();
+
+    m_notifyServiceReady = false;
+    emit NotifyServiceChanged();
 }
 
 void DBusWatch::SelectWatch()
@@ -70,6 +79,28 @@ void DBusWatch::RequestScreenshot()
 void DBusWatch::WeatherSetCityName(QString cityName)
 {
     m_weatherService->setCity(cityName);
+}
+
+void DBusWatch::TimeServiceReady()
+{
+    m_timeServiceReady = true;
+    emit TimeServiceChanged();
+}
+
+bool DBusWatch::StatusTimeService()
+{
+    return m_timeServiceReady;
+}
+
+void DBusWatch::NotifyServiceReady()
+{
+    m_notifyServiceReady = true;
+    emit NotifyServiceChanged();
+}
+
+bool DBusWatch::StatusNotifyService()
+{
+    return m_notifyServiceReady;
 }
 
 void DBusWatch::SetTime(QDateTime t)

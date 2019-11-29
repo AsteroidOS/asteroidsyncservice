@@ -65,11 +65,10 @@ private:
 
 private slots:
     void dataChanged();
-    void timeServiceUp();
-    void serviceDown();
+    void statusTimeService();
     void batteryServiceReady();
     void batteryLevelRefresh(quint8 batLvl);
-    void notifyServiceUp();
+    void statusNotifyService();
 
 private:
     QDBusObjectPath m_path;
