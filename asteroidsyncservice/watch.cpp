@@ -25,8 +25,8 @@
 Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_path(path)
 {
     m_iface = new QDBusInterface("org.asteroidsyncservice", path.path(), "org.asteroidsyncservice.Watch", QDBusConnection::sessionBus(), this);
-    connect(m_iface, SIGNAL(TimeServiceChanged()), this, SLOT(statusTimeService()));
-    connect(m_iface, SIGNAL(NotifyServiceChanged()), this, SLOT(statusNotifyService()));
+    connect(m_iface, SIGNAL(TimeServiceChanged()), this, SIGNAL(timeServiceChanged()));
+    connect(m_iface, SIGNAL(NotifyServiceChanged()), this, SIGNAL(notificationServiceChanged()));
     connect(m_iface, SIGNAL(BatteryServiceReady()), this, SLOT(batteryServiceReady()));
     connect(m_iface, SIGNAL(LevelChanged(quint8)), this, SLOT(batteryLevelRefresh(quint8)));
     
@@ -83,8 +83,8 @@ void Watch::dataChanged()
     m_name = fetchProperty("Name").toString();
     m_address = fetchProperty("Address").toString();
     m_batteryLevel = fetchProperty("BatteryLevel").toInt();
-    statusTimeService();
-    statusNotifyService();
+    emit timeServiceChanged();
+    emit notificationServiceChanged();
 }
 
 void Watch::requestScreenshot()
@@ -99,16 +99,7 @@ void Watch::setTime(QDateTime t)
 
 bool Watch::timeServiceReady()
 {
-    return m_timeServiceReady;
-}
-
-void Watch::statusTimeService()
-{
-    bool timeServiceReady = fetchProperty("StatusTimeService").toBool();
-    if(timeServiceReady != m_timeServiceReady) {
-        m_timeServiceReady = timeServiceReady;
-        emit timeServiceChanged();
-    }
+    return fetchProperty("StatusTimeService").toBool();
 }
 
 void Watch::batteryServiceReady()
@@ -130,16 +121,7 @@ void Watch::batteryLevelRefresh(quint8 batLvl)
 
 bool Watch::notificationServiceReady()
 {
-    return m_notificationServiceReady;
-}
-
-void Watch::statusNotifyService()
-{
-    bool notificationServiceReady = fetchProperty("StatusNotifyService").toBool();
-    if(notificationServiceReady != m_notificationServiceReady) {
-        m_notificationServiceReady = notificationServiceReady;
-        emit notificationServiceChanged();
-    }
+    return fetchProperty("StatusNotifyService").toBool();
 }
 
 void Watch::setVibration(QString v)
