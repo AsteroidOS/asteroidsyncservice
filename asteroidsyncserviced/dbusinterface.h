@@ -42,6 +42,9 @@ signals:
     void TimeServiceChanged();
     void BatteryServiceReady();
     void NotifyServiceChanged();
+    void ScreenshotServiceChanged();
+    void ProgressChanged(unsigned int);
+    void ScreenshotReceived(QByteArray);
 
 public slots:
     void SelectWatch();
@@ -52,6 +55,7 @@ public slots:
     quint8 BatteryLevel();
     bool StatusTimeService();
     bool StatusNotifyService();
+    bool StatusScreenshotService();
     void RequestScreenshot();
     void WeatherSetCityName(QString cityName);
     void SetTime(QDateTime t);
@@ -61,6 +65,7 @@ public slots:
 private slots:
     void TimeServiceReady();
     void NotifyServiceReady();
+    void ScreenshotServiceReady();
     void Disconnected();
 
 private:
@@ -75,6 +80,7 @@ private:
     NotificationService *m_notificationService;
     bool m_timeServiceReady = false;
     bool m_notifyServiceReady = false;
+    bool m_screenshotServiceReady = false;
 };
 
 class DBusInterface : public QObject

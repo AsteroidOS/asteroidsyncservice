@@ -39,6 +39,9 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
     connect(m_batteryService, SIGNAL(levelChanged(quint8)), this, SIGNAL(LevelChanged(quint8)));
     connect(m_timeService, SIGNAL(ready()), this, SLOT(TimeServiceReady()));
     connect(m_notificationService, SIGNAL(ready()), this, SLOT(NotifyServiceReady()));
+    connect(m_screenshotService, SIGNAL(ready()), this, SLOT(ScreenshotServiceReady()));
+    connect(m_screenshotService, SIGNAL(progressChanged(unsigned int)), this, SIGNAL(ProgressChanged(unsigned int)));
+    connect(m_screenshotService, SIGNAL(screenshotReceived(QByteArray)), this, SIGNAL(ScreenshotReceived(QByteArray)));
     connect(wm, SIGNAL(disconnected()), this, SLOT(Disconnected()));
 }
 
@@ -49,6 +52,9 @@ void DBusWatch::Disconnected()
 
     m_notifyServiceReady = false;
     emit NotifyServiceChanged();
+
+    m_screenshotServiceReady = false;
+    emit ScreenshotServiceChanged();
 }
 
 void DBusWatch::SelectWatch()
@@ -116,6 +122,17 @@ void DBusWatch::SetVibration(QString v)
 void DBusWatch::SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary)
 {
     m_notificationService->insertNotification("", id, appName, icon, body, summary, NotificationService::Strong);
+}
+
+void DBusWatch::ScreenshotServiceReady()
+{
+    m_screenshotServiceReady = true;
+    emit ScreenshotServiceChanged();
+}
+
+bool DBusWatch::StatusScreenshotService()
+{
+    return m_screenshotServiceReady;
 }
 
 
