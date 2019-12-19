@@ -77,9 +77,7 @@ signals:
 private:
     QVariant fetchProperty(const QString &propertyName);
     bool createDir(const QDir path);
-    QString createScreenshotFilename(QString filename, const QString suffix);
-    QString getScreenshotDir(const QDir dir);
-    QDateTime getCurrentDateTime();
+    QString createScreenshotFilename(const QString filename);
 
 private slots:
     void dataChanged();

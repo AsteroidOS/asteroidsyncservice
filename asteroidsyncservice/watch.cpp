@@ -93,7 +93,7 @@ void Watch::dataChanged()
 void Watch::requestScreenshot()
 {
     m_iface->call("RequestScreenshot");
-    m_screenshotName = createScreenshotFilename(m_screenshotUrl.fileName(), m_screenshotUrl.suffix());
+    m_screenshotName = createScreenshotFilename(m_screenshotUrl.fileName());
 }
 
 void Watch::setTime(QDateTime t)
@@ -156,7 +156,8 @@ void Watch::screenshotTransferProgress(unsigned int progress)
 
 void Watch::screenshotReceived(QByteArray data)
 {
-    QString filePath = getScreenshotDir(m_screenshotUrl.dir()) + QDir::separator() + m_screenshotName;
+    QDir dir = m_screenshotUrl.dir();
+    QString filePath = dir.path() + QDir::separator() + m_screenshotName;
     QSaveFile file(filePath);
     file.open(QIODevice::WriteOnly);
     file.write(data);
@@ -187,18 +188,8 @@ bool Watch::createDir(const QDir path)
     }
 }
 
-QString Watch::getScreenshotDir(const QDir dir)
+QString Watch::createScreenshotFilename(const QString filename)
 {
-    return dir.path();
-}
-
-QString Watch::createScreenshotFilename(QString filename, const QString suffix)
-{
-    QString fileNameExSuffix = filename.remove(suffix);
-    return "screenshot" + getCurrentDateTime().toString(fileNameExSuffix.remove("screenshot")) + suffix;
-}
-
-QDateTime Watch::getCurrentDateTime()
-{
-    return QDateTime::currentDateTime();
+    QDateTime dt = QDateTime::currentDateTime();
+    return dt.toString(filename);
 }
