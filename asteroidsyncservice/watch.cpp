@@ -27,11 +27,11 @@ Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_
     m_iface = new QDBusInterface("org.asteroidsyncservice", path.path(), "org.asteroidsyncservice.Watch", QDBusConnection::sessionBus(), this);
     connect(m_iface, SIGNAL(TimeServiceChanged()), this, SIGNAL(timeServiceChanged()));
     connect(m_iface, SIGNAL(NotifyServiceChanged()), this, SIGNAL(notificationServiceChanged()));
-    connect(m_iface, SIGNAL(BatteryServiceReady()), this, SLOT(batteryServiceReady()));
-    connect(m_iface, SIGNAL(LevelChanged(quint8)), this, SLOT(batteryLevelRefresh(quint8)));
+    connect(m_iface, SIGNAL(BatteryServiceReady()), this, SLOT(onBatteryServiceReady()));
+    connect(m_iface, SIGNAL(LevelChanged(quint8)), this, SLOT(onBatteryLevelRefresh(quint8)));
     connect(m_iface, SIGNAL(ScreenshotServiceChanged()), this, SIGNAL(screenshotServiceChanged()));
-    connect(m_iface, SIGNAL(ProgressChanged(unsigned int)), this, SLOT(screenshotTransferProgress(unsigned int)));
-    connect(m_iface, SIGNAL(ScreenshotReceived(QByteArray)), this, SLOT(screenshotReceived(QByteArray)));
+    connect(m_iface, SIGNAL(ProgressChanged(unsigned int)), this, SLOT(onScreenshotTransferProgress(unsigned int)));
+    connect(m_iface, SIGNAL(ScreenshotReceived(QByteArray)), this, SLOT(onScreenshotReceived(QByteArray)));
     
     dataChanged();
 }
@@ -106,7 +106,7 @@ bool Watch::timeServiceReady()
     return fetchProperty("StatusTimeService").toBool();
 }
 
-void Watch::batteryServiceReady()
+void Watch::onBatteryServiceReady()
 {
     quint8 batLvl = fetchProperty("BatteryLevel").toInt();
     if(batLvl !=  m_batteryLevel) {
@@ -115,7 +115,7 @@ void Watch::batteryServiceReady()
     }
 }
 
-void Watch::batteryLevelRefresh(quint8 batLvl)
+void Watch::onBatteryLevelRefresh(quint8 batLvl)
 {
     if(batLvl != m_batteryLevel) {
         m_batteryLevel = batLvl;
@@ -148,13 +148,13 @@ unsigned int Watch::screenshotProgress()
     return m_scrnProgress;
 }
 
-void Watch::screenshotTransferProgress(unsigned int progress)
+void Watch::onScreenshotTransferProgress(unsigned int progress)
 {
     m_scrnProgress = progress;
     emit screenshotProgressChanged();
 }
 
-void Watch::screenshotReceived(QByteArray data)
+void Watch::onScreenshotReceived(QByteArray data)
 {
     QDir dir = m_screenshotUrl.dir();
     QString filePath = dir.path() + QDir::separator() + m_screenshotName;

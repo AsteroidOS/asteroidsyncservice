@@ -37,15 +37,15 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
 
     connect(m_batteryService, SIGNAL(ready()), this, SIGNAL(BatteryServiceReady()));    
     connect(m_batteryService, SIGNAL(levelChanged(quint8)), this, SIGNAL(LevelChanged(quint8)));
-    connect(m_timeService, SIGNAL(ready()), this, SLOT(TimeServiceReady()));
-    connect(m_notificationService, SIGNAL(ready()), this, SLOT(NotifyServiceReady()));
-    connect(m_screenshotService, SIGNAL(ready()), this, SLOT(ScreenshotServiceReady()));
+    connect(m_timeService, SIGNAL(ready()), this, SLOT(onTimeServiceReady()));
+    connect(m_notificationService, SIGNAL(ready()), this, SLOT(onNotifyServiceReady()));
+    connect(m_screenshotService, SIGNAL(ready()), this, SLOT(onScreenshotServiceReady()));
     connect(m_screenshotService, SIGNAL(progressChanged(unsigned int)), this, SIGNAL(ProgressChanged(unsigned int)));
     connect(m_screenshotService, SIGNAL(screenshotReceived(QByteArray)), this, SIGNAL(ScreenshotReceived(QByteArray)));
-    connect(wm, SIGNAL(disconnected()), this, SLOT(Disconnected()));
+    connect(wm, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 }
 
-void DBusWatch::Disconnected()
+void DBusWatch::onDisconnected()
 {
     m_timeServiceReady = false;
     emit TimeServiceChanged();
@@ -87,7 +87,7 @@ void DBusWatch::WeatherSetCityName(QString cityName)
     m_weatherService->setCity(cityName);
 }
 
-void DBusWatch::TimeServiceReady()
+void DBusWatch::onTimeServiceReady()
 {
     m_timeServiceReady = true;
     emit TimeServiceChanged();
@@ -98,7 +98,7 @@ bool DBusWatch::StatusTimeService()
     return m_timeServiceReady;
 }
 
-void DBusWatch::NotifyServiceReady()
+void DBusWatch::onNotifyServiceReady()
 {
     m_notifyServiceReady = true;
     emit NotifyServiceChanged();
@@ -124,7 +124,7 @@ void DBusWatch::SendNotify(unsigned int id, QString appName, QString icon, QStri
     m_notificationService->insertNotification("", id, appName, icon, body, summary, NotificationService::Strong);
 }
 
-void DBusWatch::ScreenshotServiceReady()
+void DBusWatch::onScreenshotServiceReady()
 {
     m_screenshotServiceReady = true;
     emit ScreenshotServiceChanged();
