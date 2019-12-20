@@ -75,16 +75,16 @@ signals:
     void screenshotPathChanged();
 
 private:
+    void dataChanged();  
     QVariant fetchProperty(const QString &propertyName);
     bool createDir(const QDir path);
     QString createScreenshotFilename(const QString filename);
 
 private slots:
-    void dataChanged();
-    void batteryServiceReady();
-    void batteryLevelRefresh(quint8 batLvl);
-    void screenshotTransferProgress(unsigned int progress);
-    void screenshotReceived(QByteArray data);
+    void onBatteryServiceReady();
+    void onBatteryLevelRefresh(quint8 batLvl);
+    void onScreenshotTransferProgress(unsigned int progress);
+    void onScreenshotReceived(QByteArray data);
 
 private:
     QDBusObjectPath m_path;

@@ -63,10 +63,10 @@ public slots:
     void SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary);
 
 private slots:
-    void TimeServiceReady();
-    void NotifyServiceReady();
-    void ScreenshotServiceReady();
-    void Disconnected();
+    void onTimeServiceReady();
+    void onNotifyServiceReady();
+    void onScreenshotServiceReady();
+    void onDisconnected();
 
 private:
     Watch *m_watch;
