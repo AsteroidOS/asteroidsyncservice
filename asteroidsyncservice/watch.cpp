@@ -162,13 +162,7 @@ void Watch::onScreenshotReceived(QByteArray data)
     file.open(QIODevice::WriteOnly);
     file.write(data);
     file.commit();
-    m_screenshotPath = filePath;
-    emit screenshotPathChanged();
-}
-
-QString Watch::screenshotPath() const
-{
-    return m_screenshotPath;
+    emit screenshotReceived(filePath);
 }
 
 void Watch::setScreenshotUrl(const QString url)
