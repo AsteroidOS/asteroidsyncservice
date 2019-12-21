@@ -38,7 +38,6 @@ class Watch : public QObject
     Q_PROPERTY(bool notificationServiceReady READ notificationServiceReady NOTIFY notificationServiceChanged)
     Q_PROPERTY(bool screenshotServiceReady READ screenshotServiceReady NOTIFY screenshotServiceChanged)
     Q_PROPERTY(unsigned int screenshotProgress READ screenshotProgress NOTIFY screenshotProgressChanged)
-    Q_PROPERTY(QString screenshotPath READ screenshotPath NOTIFY screenshotPathChanged)
 
 public:
     explicit Watch(const QDBusObjectPath &path, QObject *parent = 0);
@@ -54,7 +53,6 @@ public:
     bool timeServiceReady();
     bool screenshotServiceReady();
     unsigned int screenshotProgress();
-    QString screenshotPath() const;
     Q_INVOKABLE void setScreenshotUrl(const QString url);
     Q_INVOKABLE void setTime(QDateTime t);
     bool notificationServiceReady();
@@ -72,7 +70,7 @@ signals:
     void notificationServiceChanged();
     void screenshotServiceChanged();
     void screenshotProgressChanged();
-    void screenshotPathChanged();
+    void screenshotReceived(QString screenshotPath);
 
 private:
     void dataChanged();  
@@ -95,7 +93,6 @@ private:
     qint8 m_batteryLevel = 0;
     unsigned int m_scrnProgress = 0;
     QFileInfo m_screenshotUrl;
-    QString m_screenshotPath;
     QString m_screenshotName;
 };
 
