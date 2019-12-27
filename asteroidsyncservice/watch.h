@@ -53,7 +53,7 @@ public:
     bool timeServiceReady();
     bool screenshotServiceReady();
     unsigned int screenshotProgress();
-    Q_INVOKABLE void setScreenshotUrl(const QString url);
+    Q_INVOKABLE void setScreenshotFileInfo(const QString fileInfo);
     Q_INVOKABLE void setTime(QDateTime t);
     bool notificationServiceReady();
     Q_INVOKABLE void setVibration(QString v);
@@ -92,7 +92,7 @@ private:
     QDBusInterface *m_iface;
     qint8 m_batteryLevel = 0;
     unsigned int m_scrnProgress = 0;
-    QFileInfo m_screenshotUrl;
+    QFileInfo m_screenshotFileInfo;
     QString m_screenshotName;
 };
 

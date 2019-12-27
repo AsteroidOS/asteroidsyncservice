@@ -93,7 +93,7 @@ void Watch::dataChanged()
 void Watch::requestScreenshot()
 {
     m_iface->call("RequestScreenshot");
-    m_screenshotName = createScreenshotFilename(m_screenshotUrl.fileName());
+    m_screenshotName = createScreenshotFilename(m_screenshotFileInfo.fileName());
 }
 
 void Watch::setTime(QDateTime t)
@@ -156,7 +156,7 @@ void Watch::onScreenshotTransferProgress(unsigned int progress)
 
 void Watch::onScreenshotReceived(QByteArray data)
 {
-    QDir dir = m_screenshotUrl.dir();
+    QDir dir = m_screenshotFileInfo.dir();
     QString filePath = dir.path() + QDir::separator() + m_screenshotName;
     QSaveFile file(filePath);
     file.open(QIODevice::WriteOnly);
@@ -165,12 +165,12 @@ void Watch::onScreenshotReceived(QByteArray data)
     emit screenshotReceived(filePath);
 }
 
-void Watch::setScreenshotUrl(const QString url)
+void Watch::setScreenshotFileInfo(const QString fileInfo)
 {
-    QFileInfo fileInfo(url);
-    if(!createDir(fileInfo.dir()))
+    QFileInfo fInfo(fileInfo);
+    if(!createDir(fInfo.dir()))
         qDebug() << "Unable to create directory";
-    m_screenshotUrl = fileInfo;
+    m_screenshotFileInfo = fileInfo;
 }
 
 bool Watch::createDir(const QDir path)
