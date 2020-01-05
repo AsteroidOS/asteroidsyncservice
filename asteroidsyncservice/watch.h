@@ -33,6 +33,7 @@ class Watch : public QObject
     Q_OBJECT
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString weatherCityName READ weatherCityName WRITE setWeatherCityName NOTIFY weatherCityNameChanged)
+    Q_PROPERTY(bool weatherServiceReady READ weatherServiceReady NOTIFY weatherServiceChanged)
     Q_PROPERTY(quint8 batteryLevel READ batteryLevel NOTIFY batteryLevelChanged)
     Q_PROPERTY(bool timeServiceReady READ timeServiceReady NOTIFY timeServiceChanged)
     Q_PROPERTY(bool notificationServiceReady READ notificationServiceReady NOTIFY notificationServiceChanged)
@@ -58,6 +59,7 @@ public:
     bool notificationServiceReady();
     Q_INVOKABLE void setVibration(QString v);
     Q_INVOKABLE void sendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary);
+    bool weatherServiceReady();
 
 public slots:
     void requestScreenshot();
@@ -71,6 +73,7 @@ signals:
     void screenshotServiceChanged();
     void screenshotProgressChanged();
     void screenshotReceived(QString screenshotPath);
+    void weatherServiceChanged();
 
 private:
     void dataChanged();  

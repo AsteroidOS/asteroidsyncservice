@@ -32,6 +32,7 @@ Watch::Watch(const QDBusObjectPath &path, QObject *parent) : QObject(parent), m_
     connect(m_iface, SIGNAL(ScreenshotServiceChanged()), this, SIGNAL(screenshotServiceChanged()));
     connect(m_iface, SIGNAL(ProgressChanged(unsigned int)), this, SLOT(onScreenshotTransferProgress(unsigned int)));
     connect(m_iface, SIGNAL(ScreenshotReceived(QByteArray)), this, SLOT(onScreenshotReceived(QByteArray)));
+    connect(m_iface, SIGNAL(WeatherServiceChanged()), this, SIGNAL(weatherServiceChanged()));
     
     dataChanged();
 }
@@ -186,4 +187,9 @@ QString Watch::createScreenshotFilename(const QString filename)
 {
     QDateTime dt = QDateTime::currentDateTime();
     return dt.toString(filename);
+}
+
+bool Watch::weatherServiceReady()
+{
+    return fetchProperty("StatusWeatherService").toBool();
 }
