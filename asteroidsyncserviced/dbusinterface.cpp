@@ -42,6 +42,7 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
     connect(m_screenshotService, SIGNAL(ready()), this, SLOT(onScreenshotServiceReady()));
     connect(m_screenshotService, SIGNAL(progressChanged(unsigned int)), this, SIGNAL(ProgressChanged(unsigned int)));
     connect(m_screenshotService, SIGNAL(screenshotReceived(QByteArray)), this, SIGNAL(ScreenshotReceived(QByteArray)));
+    connect(m_weatherService, SIGNAL(ready()), this, SLOT(onWeatherServiceReady()));
     connect(wm, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 }
 
@@ -55,6 +56,9 @@ void DBusWatch::onDisconnected()
 
     m_screenshotServiceReady = false;
     emit ScreenshotServiceChanged();
+
+    m_weatherServiceReady = false;
+    emit WeatherServiceChanged();
 }
 
 void DBusWatch::SelectWatch()
@@ -135,6 +139,16 @@ bool DBusWatch::StatusScreenshotService()
     return m_screenshotServiceReady;
 }
 
+void DBusWatch::onWeatherServiceReady()
+{
+    m_weatherServiceReady = true;
+    emit WeatherServiceChanged();
+}
+
+bool DBusWatch::StatusWeatherService()
+{
+    return m_weatherServiceReady;
+}
 
 /* Manager Interface */
 
