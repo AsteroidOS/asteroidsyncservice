@@ -21,10 +21,12 @@
 #define DBUSINTERFACE_H
 
 #include "watchesmanager.h"
+#include "openweathermapparser.h"
 
 #include <QObject>
 #include <QDBusAbstractAdaptor>
 #include <QDBusObjectPath>
+#include <QNetworkAccessManager>
 
 class Watch;
 
@@ -59,10 +61,10 @@ public slots:
     bool StatusScreenshotService();
     bool StatusWeatherService();
     void RequestScreenshot();
-    void WeatherSetCityName(QString cityName);
     void SetTime(QDateTime t);
     void SetVibration(QString v);
     void SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary);
+    void SetWeatherLocation(const QString lat, const QString lng);
 
 private slots:
     void onTimeServiceReady();
@@ -70,12 +72,15 @@ private slots:
     void onScreenshotServiceReady();
     void onWeatherServiceReady();
     void onDisconnected();
+    void onReplyFinished();
 
 private:
     Watch *m_watch;
 
     WatchesManager* m_wm;
-
+    void owmRequest(const QString lat, const QString lng) const;
+    QNetworkAccessManager *m_nam;
+    OpenWeatherMapParser *m_wmp;
     BatteryService *m_batteryService;
     ScreenshotService *m_screenshotService;
     WeatherService *m_weatherService;
