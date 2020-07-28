@@ -177,7 +177,7 @@ void Watch::setScreenshotFileInfo(const QString fileInfo)
 bool Watch::createDir(const QDir path)
 {
     if(!path.exists()) {
-        return path.mkdir(path.path());
+        return path.mkpath(path.path());
     } else {
         return true;
     }
