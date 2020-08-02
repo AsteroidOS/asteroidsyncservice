@@ -4,74 +4,98 @@ OpenWeatherMapParser::OpenWeatherMapParser(QObject *parent) : QObject(parent)
 {
 }
 
-QList<short> OpenWeatherMapParser::getWeatherId(QJsonArray list)
+void OpenWeatherMapParser::prepareData(QJsonObject obj)
 {
-    QList<short> id;
+    m_weatherId.clear();
+    m_tempMin.clear();
+    m_tempMax.clear();
+    m_dateTempMin.setDate(0, 0, 0);
+    m_dateTempMax.setDate(0, 0, 0);
+
     QDateTime timestamp;
+    QJsonArray list = obj.value("list").toArray();
 
-    for(int i = 0; i < 5; i++) {
-        QJsonObject dayInfo = list.takeAt(i).toObject();
-        QJsonArray dayWeather = dayInfo.value("weather").toArray();
-        QJsonObject firstEntry = dayWeather.takeAt(0).toObject();
-        id << firstEntry.value("id").toInt();
-    }
-
-    return id;
-}
-
-QList<short> OpenWeatherMapParser::getTempMin(QJsonArray list)
-{
-    QList<short> tempMin;
-    QDateTime timestamp;
-    QJsonObject dayInfo = list.at(0).toObject();
-    timestamp.setTime_t(dayInfo.value("dt").toInt());
-    QString actDate = timestamp.toString("dd.MM.yyyy");
-    QJsonObject dayMain = dayInfo.value("main").toObject();
-    short int tmp = dayMain.value("temp_min").toDouble();
-    
-    for(int i = 1; i < list.size(); i++) {
-        dayInfo = list.at(i).toObject();
+    for(auto element : list) {
+        QJsonObject dayInfo = element.toObject();
         timestamp.setTime_t(dayInfo.value("dt").toInt());
-        dayMain = dayInfo.value("main").toObject();
-        if(actDate == timestamp.toString("dd.MM.yyyy") && dayMain.value("temp_min").toDouble() < tmp) {
-            tmp = dayMain.value("temp_min").toDouble();
-        } else if(actDate != timestamp.toString("dd.MM.yyyy")) {
-            tempMin << tmp;
-            actDate = timestamp.toString("dd.MM.yyyy");
-            tmp = dayMain.value("temp_min").toDouble();
-        }
+
+        setWeatherId(dayInfo.value("weather").toArray(), timestamp.time());
+        setMinTemp(dayInfo.value("main").toObject(), timestamp.date());
+        setMaxTemp(dayInfo.value("main").toObject(), timestamp.date());
     }
 
-    return tempMin;
+    setCity(obj.value("city").toObject());
 }
 
-QList<short> OpenWeatherMapParser::getTempMax(QJsonArray list)
+void OpenWeatherMapParser::setWeatherId(QJsonArray weather, QTime time)
 {
-    QList<short> tempMax;
-    QDateTime timestamp;
-    QJsonObject dayInfo = list.at(0).toObject();
-    timestamp.setTime_t(dayInfo.value("dt").toInt());
-    QString actDate = timestamp.toString("dd.MM.yyyy");
-    QJsonObject dayMain = dayInfo.value("main").toObject();
-    short int tmp = dayMain.value("temp_max").toDouble();
-    
-    for(int i = 1; i < list.size(); i++) {
-        dayInfo = list.at(i).toObject();
-        timestamp.setTime_t(dayInfo.value("dt").toInt());
-        dayMain = dayInfo.value("main").toObject();
-        if(actDate == timestamp.toString("dd.MM.yyyy") && dayMain.value("temp_max").toDouble() > tmp) {
-            tmp = dayMain.value("temp_max").toDouble();
-        } else if(actDate != timestamp.toString("dd.MM.yyyy")) {
-            tempMax << tmp;
-            actDate = timestamp.toString("dd.MM.yyyy");
-            tmp = dayMain.value("temp_max").toDouble();
-        }
+    QTime elevenoclock, thirteenoclock;
+    elevenoclock.setHMS(11,0,0,0);
+    thirteenoclock.setHMS(13,0,0,0);
+
+    if(time >= elevenoclock && time <= thirteenoclock) {
+        QJsonObject firstEntry = weather.first().toObject();
+        m_weatherId << firstEntry.value("id").toInt();
+    }
+}
+
+QList<short> OpenWeatherMapParser::getWeatherId()
+{
+    return m_weatherId;
+}
+
+void OpenWeatherMapParser::setMinTemp(const QJsonObject obj, const QDate date)
+{
+    if(m_tempMin.isEmpty()) {
+        m_tempMin << obj.value("temp_min").toDouble();
+        m_dateTempMin = date;
+        return;
     }
 
-    return tempMax;
+    if(m_dateTempMin == date && obj.value("temp_min").toDouble() < m_tempMin[m_tempMin.size() - 1]) {
+        m_tempMin.replace(m_tempMin.size() - 1, obj.value("temp_min").toDouble());
+    } else if(m_dateTempMin != date) {
+        if(m_tempMin.size() >= 5) return;
+
+        m_tempMin << obj.value("temp_min").toDouble();
+        m_dateTempMin = date;
+    }
 }
 
-QString OpenWeatherMapParser::getCity(QJsonObject obj)
+QList<short> OpenWeatherMapParser::getTempMin()
 {
-    return obj.value("name").toString().trimmed();
+    return m_tempMin;
+}
+
+void OpenWeatherMapParser::setMaxTemp(const QJsonObject obj, const QDate date)
+{
+    if(m_tempMax.isEmpty()) {
+        m_tempMax << obj.value("temp_max").toDouble();
+        m_dateTempMax = date;
+        return;
+    }
+
+    if(m_dateTempMax == date && obj.value("temp_max").toDouble() > m_tempMax[m_tempMax.size() - 1]) {
+        m_tempMax.replace(m_tempMax.size() - 1, obj.value("temp_max").toDouble());
+    } else if(m_dateTempMax != date) {
+        if(m_tempMax.size() >= 5) return;
+
+        m_tempMax << obj.value("temp_max").toDouble();
+        m_dateTempMax = date;
+    }
+}
+
+QList<short> OpenWeatherMapParser::getTempMax()
+{
+    return m_tempMax;
+}
+
+void OpenWeatherMapParser::setCity(const QJsonObject obj)
+{
+    m_city = obj.value("name").toString().trimmed();
+}
+
+QString OpenWeatherMapParser::getCity()
+{
+    return m_city;
 }

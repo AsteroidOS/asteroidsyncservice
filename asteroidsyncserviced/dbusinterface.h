@@ -72,7 +72,7 @@ private slots:
     void onScreenshotServiceReady();
     void onWeatherServiceReady();
     void onDisconnected();
-    void onReplyFinished();
+    void onOwmReplyFinished();
 
 private:
     Watch *m_watch;

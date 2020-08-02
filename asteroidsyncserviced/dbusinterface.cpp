@@ -168,10 +168,10 @@ void DBusWatch::owmRequest(const QString lat, const QString lng) const
 
     QNetworkRequest request(url);
     QNetworkReply* reply = m_nam->get(request);
-    connect(reply, &QNetworkReply::finished, this, &DBusWatch::onReplyFinished);
+    connect(reply, &QNetworkReply::finished, this, &DBusWatch::onOwmReplyFinished);
 }
 
-void DBusWatch::onReplyFinished()
+void DBusWatch::onOwmReplyFinished()
 {
     QJsonObject rootObj;
     QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
@@ -182,14 +182,17 @@ void DBusWatch::onReplyFinished()
         rootObj = document.object();
     } else {
         qDebug() << "Network error" << reply->errorString();
+        return;
     }
 
-    QJsonArray list = rootObj.value("list").toArray();
-
-    m_weatherService->setCity(m_wmp->getCity(rootObj.value("city").toObject()));
-    m_weatherService->setIds(m_wmp->getWeatherId(list));
-    m_weatherService->setMinTemps(m_wmp->getTempMin(list));
-    m_weatherService->setMaxTemps(m_wmp->getTempMax(list));
+    m_wmp->prepareData(rootObj);
+    m_weatherService->setCity(m_wmp->getCity());
+    qDebug() << "WeatherID" << m_wmp->getWeatherId();
+    m_weatherService->setIds(m_wmp->getWeatherId());
+    qDebug() << "Min Temp" << m_wmp->getTempMin();
+    m_weatherService->setMinTemps(m_wmp->getTempMin());
+    qDebug() << "Max Temp" << m_wmp->getTempMax();
+    m_weatherService->setMaxTemps(m_wmp->getTempMax());
 }
 
 /* Manager Interface */
