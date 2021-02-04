@@ -4,7 +4,7 @@ Requires=dbus.socket bluetooth.target booster-qt5.service
 After=pre-user-session.target lipstick.service dbus.socket bluetooth.target booster-qt5.service
 
 [Service]
-ExecStart=/usr/bin/invoker -o --type=qt5 /usr/bin/asteroidsyncserviced
+ExecStart=/usr/bin/invoker -o --type=qt5 /usr/bin/harbour-asteroidsyncserviced
 Restart=always
 
 [Install]

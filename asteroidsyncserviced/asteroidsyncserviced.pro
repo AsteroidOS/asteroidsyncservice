@@ -4,7 +4,13 @@ QT -= gui
 include(../version.pri)
 include(libasteroid/libasteroid.pri)
 
-TARGET = asteroidsyncserviced
+contains(CONFIG, telescope) {
+    TARGET = asteroidsyncserviced
+}
+
+contains(CONFIG, starfish) {
+    TARGET = harbour-asteroidsyncserviced
+}
 
 CONFIG += c++11
 CONFIG += console
