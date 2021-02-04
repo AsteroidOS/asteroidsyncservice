@@ -3,4 +3,4 @@
 	url = https://github.com/AsteroidOS/libasteroid
 [submodule "asteroidsyncserviced/libwatchfish"]
 	path = asteroidsyncserviced/libwatchfish
-	url = https://git.javispedro.com/libwatchfish.git
+	url = git@github.com:piggz/libwatchfish.git

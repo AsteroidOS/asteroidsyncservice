@@ -9,7 +9,7 @@ uri = org.asteroid.syncservice
 
 contains(CONFIG, telescope) {
     include(telescope.pri)
-} 
+}
 
 contains(CONFIG, starfish) {
     include(starfish.pri)

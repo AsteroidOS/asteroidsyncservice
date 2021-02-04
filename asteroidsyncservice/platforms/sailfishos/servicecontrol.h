@@ -23,7 +23,7 @@
 #include <QDBusInterface>
 #include <QObject>
 
-static const QString SYNCSERVICED_SYSTEMD_UNIT("asteroidsyncserviced.service");
+static const QString SYNCSERVICED_SYSTEMD_UNIT("harbour-asteroidsyncserviced.service");
 
 class ServiceControl : public QObject
 {
