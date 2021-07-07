@@ -57,17 +57,6 @@ QString Watch::name()
     return m_name;
 }
 
-QString Watch::weatherCityName()
-{
-    return ""; // TODO
-}
-
-void Watch::setWeatherCityName(const QString &c)
-{
-    m_iface->call("WeatherSetCityName", c);
-    emit weatherCityNameChanged();
-}
-
 quint8 Watch::batteryLevel() {
     return m_batteryLevel;
 }
@@ -192,4 +181,9 @@ QString Watch::createScreenshotFilename(const QString filename)
 bool Watch::weatherServiceReady()
 {
     return fetchProperty("StatusWeatherService").toBool();
+}
+
+void Watch::setWeatherLocation(const float lat, const float lng)
+{
+    m_iface->call("SetWeatherLocation", QString::number(lat), QString::number(lng));
 }
