@@ -30,9 +30,7 @@
 #include "bluez_adapter1.h"
 #include "bluez_agentmanager1.h"
 
-#ifndef NOTIF_UUID
 #define NOTIF_UUID "00009071-0000-0000-0000-00a57e401d05"
-#endif
 
 class Device {
 public:

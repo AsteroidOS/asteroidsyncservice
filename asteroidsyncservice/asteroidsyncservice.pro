@@ -2,7 +2,7 @@ TEMPLATE = lib
 TARGET = asteroidsyncserviceplugin
 QT += qml quick dbus
 CONFIG += qt plugin
-include(../../version.pri)
+include(../version.pri)
 
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = org.asteroid.syncservice

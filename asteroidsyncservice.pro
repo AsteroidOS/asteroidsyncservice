@@ -1,5 +1,3 @@
-include(../version.pri)
-
 TEMPLATE = subdirs
 SUBDIRS = asteroidsyncservice asteroidsyncserviced
 OTHER_FILES += \
