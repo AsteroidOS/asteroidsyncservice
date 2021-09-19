@@ -33,22 +33,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    WatchesManager *watchesManager = new WatchesManager();
+    WatchesManager watchesManager;
     #ifdef UBUNTU_TOUCH_PLATFORM
-      UbuntuPlatform *platform = new UbuntuPlatform(watchesManager);
+    UbuntuPlatform platform(watchesManager);
     #elif SAILFISHOS_PLATFORM
-      SailfishPlatform *platform = new SailfishPlatform(watchesManager);
+    SailfishPlatform platform(watchesManager);
     #endif
-    DBusInterface *dbusInterface = new DBusInterface(watchesManager);
+    DBusInterface dbusInterface(watchesManager);
 
-    int retval = a.exec();
-
-    if(dbusInterface)
-        delete dbusInterface;
-    if(platform)
-        delete platform;
-    if(watchesManager)
-        delete watchesManager;
-
-    return retval;
+    return a.exec();
 }
