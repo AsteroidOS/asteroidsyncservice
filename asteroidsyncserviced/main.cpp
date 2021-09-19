@@ -35,11 +35,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     WatchesManager watchesManager;
     #ifdef UBUNTU_TOUCH_PLATFORM
-    UbuntuPlatform platform(watchesManager);
+    UbuntuPlatform platform(&watchesManager);
     #elif SAILFISHOS_PLATFORM
-    SailfishPlatform platform(watchesManager);
+    SailfishPlatform platform(&watchesManager);
     #endif
-    DBusInterface dbusInterface(watchesManager);
+    DBusInterface dbusInterface(&watchesManager);
 
     return a.exec();
 }
