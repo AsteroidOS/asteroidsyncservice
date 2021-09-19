@@ -1,7 +1,7 @@
 QT += core bluetooth dbus
 QT -= gui
 
-include(../version.pri)
+include(../../version.pri)
 include(libasteroid/libasteroid.pri)
 
 contains(CONFIG, telescope) {

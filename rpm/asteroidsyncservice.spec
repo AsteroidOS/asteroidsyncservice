@@ -40,17 +40,17 @@ Support for AsteroidOS watches in SailfishOS.
 rm -rf %{buildroot}
 %qmake5_install
 
-mkdir -p %{buildroot}%{_libdir}/systemd/user/user-session.target.wants
-ln -s ../asteroidsyncserviced.service %{buildroot}%{_libdir}/systemd/user/user-session.target.wants/
+mkdir -p %{buildroot}%{_userunitdir}/user-session.target.wants
+ln -s ../asteroidsyncserviced.service %{buildroot}%{_userunitdir}/user-session.target.wants/
 
 %post
-grep -q "^/usr/bin/asteroidsyncserviced" /usr/share/mapplauncherd/privileges || echo "/usr/bin/asteroidsyncserviced,cehlmnpu" >> /usr/share/mapplauncherd/privileges
-su nemo -c 'systemctl --user daemon-reload'
-su nemo -c 'systemctl --user try-restart asteroidsyncserviced.service'
+echo "/usr/bin/asteroidsyncserviced,cehlmnpu" > /usr/share/mapplauncherd/privileges.d/harbour-asteroidsyncserviced.privileges
+systemctl-user daemon-reload
+systemctl-user try-restart asteroidsyncserviced.service
 
 %files
 %defattr(-,root,root,-)
 %{_bindir}
-%{_libdir}/systemd/user/%{name}d.service
-%{_libdir}/systemd/user/user-session.target.wants/%{name}d.service
+%{_userunitdir}/%{name}d.service
+%{_userunitdir}/user-session.target.wants/%{name}d.service
 %{_libdir}/qt5/qml/org/asteroid/syncservice
