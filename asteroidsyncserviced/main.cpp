@@ -41,5 +41,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     #endif
     DBusInterface *dbusInterface = new DBusInterface(watchesManager);
 
-    return a.exec();
+    int retval = a.exec();
+
+    if(dbusInterface)
+        delete dbusInterface;
+    if(platform)
+        delete platform;
+    if(watchesManager)
+        delete watchesManager;
+
+    return retval;
 }
