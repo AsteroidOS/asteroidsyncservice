@@ -45,8 +45,8 @@ ln -s ../asteroidsyncserviced.service %{buildroot}%{_userunitdir}/user-session.t
 
 %post
 grep -q "^/usr/bin/asteroidsyncserviced" /usr/share/mapplauncherd/privileges || echo "/usr/bin/asteroidsyncserviced,cehlmnpu" >> /usr/share/mapplauncherd/privileges
-su nemo -c 'systemctl --user daemon-reload'
-su nemo -c 'systemctl --user try-restart asteroidsyncserviced.service'
+systemctl-user daemon-reload
+systemctl-user try-restart asteroidsyncserviced.service
 
 %files
 %defattr(-,root,root,-)
