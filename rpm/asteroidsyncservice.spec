@@ -40,7 +40,6 @@ Support for AsteroidOS watches in SailfishOS.
 rm -rf %{buildroot}
 %qmake5_install
 
-echo %{_userunitdir}
 mkdir -p %{buildroot}%{_userunitdir}/user-session.target.wants
 ln -s ../asteroidsyncserviced.service %{buildroot}%{_userunitdir}/user-session.target.wants/
 
