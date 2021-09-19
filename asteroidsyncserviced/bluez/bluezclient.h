@@ -24,7 +24,6 @@
 #include <QBluetoothAddress>
 #include <QBluetoothLocalDevice>
 
-#include "../libasteroid/services/common.h"
 #include "bluez_helper.h"
 #include "freedesktop_objectmanager.h"
 #include "freedesktop_properties.h"
