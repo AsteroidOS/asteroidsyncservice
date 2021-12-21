@@ -8,7 +8,7 @@ contains(CONFIG, telescope) {
     TARGET = asteroidsyncserviced
 }
 
-contains(CONFIG, starfish) {
+contains(CONFIG, starship) {
     TARGET = harbour-asteroidsyncserviced
 }
 
@@ -20,8 +20,8 @@ contains(CONFIG, telescope) {
     include(telescope.pri)
 } 
 
-contains(CONFIG, starfish) {
-    include(starfish.pri)
+contains(CONFIG, starship) {
+    include(starship.pri)
 }
 
 SOURCES += main.cpp \
