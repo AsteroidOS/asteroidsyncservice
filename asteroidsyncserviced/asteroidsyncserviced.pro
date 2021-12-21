@@ -1,4 +1,4 @@
-QT += core bluetooth dbus
+QT += core bluetooth dbus network
 QT -= gui
 
 include(../../version.pri)
@@ -27,6 +27,7 @@ contains(CONFIG, starship) {
 SOURCES += main.cpp \
     watchesmanager.cpp \
     dbusinterface.cpp \
+    openweathermapparser.cpp \
     bluez/bluezclient.cpp \
     bluez/bluez_agentmanager1.cpp \
     bluez/bluez_adapter1.cpp \
@@ -36,6 +37,7 @@ SOURCES += main.cpp \
 
 HEADERS += watchesmanager.h \
     dbusinterface.h \
+    openweathermapparser.h \
     bluez/bluezclient.h \
     bluez/bluez_agentmanager1.h \
     bluez/bluez_adapter1.h \

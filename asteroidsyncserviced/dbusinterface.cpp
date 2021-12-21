@@ -19,11 +19,12 @@
 
 #include "dbusinterface.h"
 #include "watchesmanager.h"
-
 #include "libasteroid/watch.h"
 
 #include <QDBusConnection>
 #include <QDebug>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 /* Watch Interface */
 
@@ -44,6 +45,9 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
     connect(m_screenshotService, SIGNAL(screenshotReceived(QByteArray)), this, SIGNAL(ScreenshotReceived(QByteArray)));
     connect(m_weatherService, SIGNAL(ready()), this, SLOT(onWeatherServiceReady()));
     connect(wm, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+
+    m_nam = new QNetworkAccessManager(this);
+    m_wmp = new OpenWeatherMapParser(this);
 }
 
 void DBusWatch::onDisconnected()
@@ -84,11 +88,6 @@ quint8 DBusWatch::BatteryLevel()
 void DBusWatch::RequestScreenshot()
 {
     m_screenshotService->requestScreenshot();
-}
-
-void DBusWatch::WeatherSetCityName(QString cityName)
-{
-    m_weatherService->setCity(cityName);
 }
 
 void DBusWatch::onTimeServiceReady()
@@ -148,6 +147,52 @@ void DBusWatch::onWeatherServiceReady()
 bool DBusWatch::StatusWeatherService()
 {
     return m_weatherServiceReady;
+}
+
+void DBusWatch::SetWeatherLocation(const QString lat, const QString lng)
+{
+    owmRequest(lat, lng);
+}
+
+void DBusWatch::owmRequest(const QString lat, const QString lng) const
+{
+    QString owmApiKey = "b1af1d2053458fb4ab724f038ed499aa";
+    QUrl url;
+    url.setUrl("http://api.openweathermap.org/data/2.5/forecast");
+
+    QUrlQuery query;
+    query.addQueryItem("lat", lat);
+    query.addQueryItem("lon", lng);
+    query.addQueryItem("appid", owmApiKey);
+    url.setQuery(query);
+
+    QNetworkRequest request(url);
+    QNetworkReply* reply = m_nam->get(request);
+    connect(reply, &QNetworkReply::finished, this, &DBusWatch::onOwmReplyFinished);
+}
+
+void DBusWatch::onOwmReplyFinished()
+{
+    QJsonObject rootObj;
+    QNetworkReply *reply = static_cast<QNetworkReply*>(sender());
+    reply->deleteLater();
+
+    if (reply->error() == QNetworkReply::NoError)  {
+        QJsonDocument document = QJsonDocument::fromJson(reply->readAll());
+        rootObj = document.object();
+    } else {
+        qDebug() << "Network error" << reply->errorString();
+        return;
+    }
+
+    m_wmp->prepareData(rootObj);
+    m_weatherService->setCity(m_wmp->getCity());
+    qDebug() << "WeatherID" << m_wmp->getWeatherId();
+    m_weatherService->setIds(m_wmp->getWeatherId());
+    qDebug() << "Min Temp" << m_wmp->getTempMin();
+    m_weatherService->setMinTemps(m_wmp->getTempMin());
+    qDebug() << "Max Temp" << m_wmp->getTempMax();
+    m_weatherService->setMaxTemps(m_wmp->getTempMax());
 }
 
 /* Manager Interface */
