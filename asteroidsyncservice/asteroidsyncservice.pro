@@ -11,8 +11,8 @@ contains(CONFIG, telescope) {
     include(telescope.pri)
 }
 
-contains(CONFIG, starfish) {
-    include(starfish.pri)
+contains(CONFIG, starship) {
+    include(starship.pri)
 }
 
 HEADERS += \
