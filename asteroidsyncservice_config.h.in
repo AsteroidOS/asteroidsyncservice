@@ -17,24 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "syncservice_plugin.h"
+#ifndef CONFIG_H
+#define CONFIG_H
 
-#include <QtQml>
+#define VERSION "${asteroidsyncservice_VERSION_MAJOR}.${asteroidsyncservice_VERSION_MINOR}"
+#cmakedefine UBUNTU_TOUCH_PLATFORM
+#cmakedefine SAILFISHOS_PLATFORM
 
-#include "watches.h"
-#include "watch.h"
-
-#include "servicecontrol.h"
-
-SyncServicePlugin::SyncServicePlugin(QObject *parent) : QQmlExtensionPlugin(parent)
-{ }
-
-void SyncServicePlugin::registerTypes(const char *uri)
-{
-    Q_ASSERT(uri == QLatin1String("org.asteroid.syncservice"));
-
-    qmlRegisterUncreatableType<Watch>(uri, 1, 0, "Watch", "Get them from the model");
-    qmlRegisterType<Watches>(uri, 1, 0, "Watches");
-    qmlRegisterType<ServiceControl>(uri, 1, 0, "ServiceController");
-}
-
+#endif // CONFIG_H

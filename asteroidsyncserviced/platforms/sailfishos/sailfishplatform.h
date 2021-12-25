@@ -26,11 +26,11 @@
 #include "../../libwatchfish/notificationmonitor.h"
 #include "../../libwatchfish/walltimemonitor.h"
 
-#include <libasteroid/services/mediaservice.h>
-#include <libasteroid/services/notificationservice.h>
-#include <libasteroid/services/timeservice.h>
+#include <services/mediaservice.h>
+#include <services/notificationservice.h>
+#include <services/timeservice.h>
 
-#include "watchesmanager.h"
+#include "../../watchesmanager.h"
 
 class SailfishPlatform : public QObject, QDBusContext
 {
