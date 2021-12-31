@@ -1,25 +1,26 @@
 cmake_minimum_required(VERSION 3.15)
-find_package(Qt5 COMPONENTS Core Bluetooth DBus Qml Quick REQUIRED)
+find_package(QT NAMES Qt5 COMPONENTS Core Bluetooth DBus Qml Quick REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Bluetooth DBus Qml Quick REQUIRED)
 if (SAILFISHOS_PLATFORM)
     set(PLATFORM_SOURCE_DIR "platforms/sailfishos")
 endif()
 if (UBUNTU_TOUCH_PLATFORM)
     set(PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
-endif()
+endif() 
 add_library(asteroidsyncserviceplugin SHARED syncservice_plugin.cpp watch.cpp watches.cpp ${PLATFORM_SOURCE_DIR}/servicecontrol.cpp)
 target_include_directories(asteroidsyncserviceplugin PRIVATE ${PLATFORM_SOURCE_DIR})
 target_compile_features(asteroidsyncserviceplugin PUBLIC cxx_std_17)
-target_link_libraries(asteroidsyncserviceplugin PRIVATE Qt5::Core Qt5::Bluetooth Qt5::DBus Qt5::Qml Qt5::Quick asteroid)
-message("VERSION ${QT5Qml_VERSION}")
-message("LIBRARIES ${QT5Qml_LIBRARIES}")
-message("INCLUDE_DIRS ${QT5Qml_INCLUDE_DIRS}")
-message("DEFINITIONS ${QT5Qml_DEFINITIONS}")
-message("COMPILE_DEFINITIONS ${QT5Qml_COMPILE_DEFINITIONS}")
-message("FOUND ${QT5Qml_FOUND}")
-message("EXECUTABLE_COMPILE_FLAGS ${QT5Qml_EXECUTABLE_COMPILE_FLAGS}")
-get_target_property(QT5Qml_location Qt5::Qml LOCATION)
-message("location ${QT5Qml_location}")
-message(STATUS "Your qml dir file is ${QML_DIR_FILE}")
-message("QT_INSTALL_QML ${QT_INSTALL_QML}")
-install(TARGETS asteroidsyncserviceplugin)
-# other file qmldir
+target_link_libraries(asteroidsyncserviceplugin PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Bluetooth Qt${QT_VERSION_MAJOR}::DBus Qt${QT_VERSION_MAJOR}::Qml Qt${QT_VERSION_MAJOR}::Quick asteroid)
+
+# Installation paths
+get_target_property(REAL_QMAKE_EXECUTABLE ${Qt5Core_QMAKE_EXECUTABLE}
+                    IMPORTED_LOCATION)
+
+if (NOT QT_INSTALL_QML)
+    execute_process(COMMAND "${REAL_QMAKE_EXECUTABLE}" -query QT_INSTALL_QML
+                    OUTPUT_VARIABLE QT_INSTALL_QML
+                    ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+
+install(TARGETS asteroidsyncserviceplugin DESTINATION ${QT_INSTALL_QML}/org/asteroid/syncservice)
+install(FILES qmldir DESTINATION ${QT_INSTALL_QML}/org/asteroid/syncservice)
