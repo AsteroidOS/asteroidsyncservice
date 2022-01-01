@@ -28,4 +28,3 @@ target_compile_features(asteroidsyncserviced PUBLIC cxx_std_17)
 target_include_directories(asteroidsyncserviced PRIVATE ${CMAKE_BINARY_DIR} ${PLATFORM_CODE_DIR} libasteroid/src bluez)
 target_link_libraries(asteroidsyncserviced PRIVATE Qt5::Bluetooth Qt5::Core Qt5::DBus Qt5::Qml asteroid)
 install(TARGETS asteroidsyncserviced)
-# other file qmldir
