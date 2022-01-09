@@ -17,10 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "asteroidsyncservice_config.h"
 #include "dbusinterface.h"
 #include "watchesmanager.h"
 
-#include "libasteroid/watch.h"
+#include "watch.h"
 
 #include <QDBusConnection>
 #include <QDebug>

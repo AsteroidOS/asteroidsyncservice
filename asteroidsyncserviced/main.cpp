@@ -18,6 +18,7 @@
  */
 
 #include <QCoreApplication>
+#include "asteroidsyncservice_config.h"
 #include "dbusinterface.h"
 #include "watchesmanager.h"
 

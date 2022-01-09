@@ -3,9 +3,9 @@
 
 #include <QDBusContext>
 
-#include "../../libasteroid/services/mediaservice.h"
-#include "../../libasteroid/services/notificationservice.h"
-#include "../../libasteroid/services/timeservice.h"
+#include "../../libasteroid/src/services/mediaservice.h"
+#include "../../libasteroid/src/services/notificationservice.h"
+#include "../../libasteroid/src/services/timeservice.h"
 #include "../../watchesmanager.h"
 
 class UbuntuPlatform : public QObject, public QDBusContext
