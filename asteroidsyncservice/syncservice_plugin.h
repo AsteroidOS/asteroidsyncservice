@@ -18,7 +18,7 @@
 #ifndef SYNCSERVICEPLUGIN_H
 #define SYNCSERVICEPLUGIN_H
 
-#include <QQmlExtensionPlugin>
+#include <QtQml/QQmlExtensionPlugin>
 
 class SyncServicePlugin : public QQmlExtensionPlugin
 {

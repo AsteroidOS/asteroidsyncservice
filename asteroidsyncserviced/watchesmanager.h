@@ -23,10 +23,10 @@
 #include <QObject>
 #include <QBluetoothAddress>
 
-#include <libasteroid/scanner.h>
-#include <libasteroid/watchconnection.h>
+#include <scanner.h>
+#include <watchconnection.h>
 
-#include <bluez/bluezclient.h>
+#include <bluezclient.h>
 
 class Watch;
 

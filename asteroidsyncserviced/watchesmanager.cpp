@@ -19,7 +19,7 @@
 
 #include "watchesmanager.h"
 
-#include "libasteroid/watch.h"
+#include "watch.h"
 
 WatchesManager::WatchesManager(QObject *parent) : WatchConnection(parent)
 {
