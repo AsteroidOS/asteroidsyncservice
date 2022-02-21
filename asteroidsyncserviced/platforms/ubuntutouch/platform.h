@@ -2,6 +2,7 @@
 #define PLATFORM_H
 
 #include <QDBusContext>
+#include <QDBusInterface>
 
 #include "../../libasteroid/src/services/mediaservice.h"
 #include "../../libasteroid/src/services/notificationservice.h"
