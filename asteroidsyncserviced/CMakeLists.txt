@@ -8,9 +8,6 @@ add_executable(asteroidsyncserviced
     watchesmanager.cpp
     dbusinterface.cpp
     bluez/bluezclient.cpp
-    bluez/bluez_agentmanager1.cpp
-    bluez/bluez_adapter1.cpp
-    bluez/bluez_device1.cpp
     bluez/freedesktop_objectmanager.cpp
     bluez/freedesktop_properties.cpp
     "${DAEMON_PLATFORM_SOURCE_DIR}/platform.cpp"
