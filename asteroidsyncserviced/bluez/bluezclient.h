@@ -20,15 +20,13 @@
 #ifndef BLUEZCLIENT_H
 #define BLUEZCLIENT_H
 
+#include "bluez_helper.h"
+
 #include <QList>
 #include <QBluetoothAddress>
-#include <QBluetoothLocalDevice>
+#include <memory>
 
-#include "bluez_helper.h"
-#include "freedesktop_objectmanager.h"
-#include "freedesktop_properties.h"
-#include "bluez_adapter1.h"
-#include "bluez_agentmanager1.h"
+class BluezClientPrivate;
 
 class Device {
 public:
@@ -43,6 +41,8 @@ class BluezClient: public QObject
 
 public:
     BluezClient(QObject *parent = 0);
+    // declare destructor explicitly to prevent inlining 
+    virtual ~BluezClient();
 
     QList<Device> pairedWatches() const;
 
@@ -57,11 +57,8 @@ signals:
 
 private:
     bool isAsteroidOSWatch(const QStringList uuids) const;
-    QDBusConnection m_dbus;
-    DBusObjectManagerInterface m_bluezManager;
-    BluezAdapter1 *m_bluezAdapter = nullptr;
-    FreeDesktopProperties *m_bluezAdapterProperties = nullptr;
-
+    Q_DECLARE_PRIVATE(BluezClient);
+    std::unique_ptr<BluezClientPrivate> d_ptr;
     QHash<QString, Device> m_devices;
 };
 
