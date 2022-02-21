@@ -20,27 +20,35 @@
 #include "bluezclient.h"
 #include "dbus-shared.h"
 #include "services/common.h"
+#include "bluezclient_p.h"
+
+#include "bluez_helper.h"
 
 #include <QDBusConnection>
 #include <QDBusReply>
 #include <QDebug>
 
-BluezClient::BluezClient(QObject *parent):
-    QObject(parent),
+BluezClientPrivate::BluezClientPrivate():
     m_dbus(QDBusConnection::systemBus()),
     m_bluezManager("org.bluez", "/", m_dbus)
+{
+}
+
+BluezClient::BluezClient(QObject *parent):
+    QObject(parent),
+    d_ptr{std::make_unique<BluezClientPrivate>()}
 {
     qDBusRegisterMetaType<InterfaceList>();
     qDBusRegisterMetaType<ManagedObjectList>();
 
-    if (m_bluezManager.isValid()) {
-        connect(&m_bluezManager, SIGNAL(InterfacesAdded(QDBusObjectPath,InterfaceList)),
+    if (d_ptr->m_bluezManager.isValid()) {
+        connect(&d_ptr->m_bluezManager, SIGNAL(InterfacesAdded(QDBusObjectPath,InterfaceList)),
                 this, SLOT(slotInterfacesAdded(QDBusObjectPath,InterfaceList)));
 
-        connect(&m_bluezManager, SIGNAL(InterfacesRemoved(QDBusObjectPath,QStringList)),
+        connect(&d_ptr->m_bluezManager, SIGNAL(InterfacesRemoved(QDBusObjectPath,QStringList)),
                 this, SLOT(slotInterfacesRemoved(QDBusObjectPath,QStringList)));
 
-        auto objectList = m_bluezManager.GetManagedObjects().argumentAt<0>();
+        auto objectList = d_ptr->m_bluezManager.GetManagedObjects().argumentAt<0>();
         auto iterator = objectList.constBegin();
         while (iterator != objectList.constEnd()) {
             InterfaceList ifaces = iterator.value();
@@ -102,11 +110,19 @@ BluezClient::BluezClient(QObject *parent):
         }
     }
 }
+/*
+ * Note that this destructor definition must be here to allow the 
+ * compiler to calculate the size of the object pointed to by
+ * std::unique_ptr.  
+ *
+ * See https://stackoverflow.com/questions/6012157
+ */
+BluezClient::~BluezClient() = default;
 
 QList<Device> BluezClient::pairedWatches() const
 {
     QList<Device> ret;
-    if (m_bluezManager.isValid()) {
+    if (d_func()->m_bluezManager.isValid()) {
         foreach (const Device &dev, m_devices) {
             ret << dev;
         }
