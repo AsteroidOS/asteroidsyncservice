@@ -49,8 +49,8 @@ public:
 private slots:
     void addDevice(const QDBusObjectPath &path, const QVariantMap &properties);
 
-    void slotInterfacesAdded(const QDBusObjectPath&path, InterfaceList ifaces);
-    void slotInterfacesRemoved(const QDBusObjectPath&path, const QStringList &ifaces);
+    void slotInterfacesAdded(const QDBusObjectPath &path, InterfaceList ifaces);
+    void slotInterfacesRemoved(const QDBusObjectPath &path, const QStringList &ifaces);
 
 signals:
     void devicesChanged();
