@@ -5,9 +5,15 @@ project(asteroidsyncservice VERSION 1.0.0)
 option(SAILFISHOS_PLATFORM "Build the project for the SailfishOS platform" OFF)
 option(UBUNTU_TOUCH_PLATFORM "Build the project for the Ubuntu Touch platform" OFF)
 
-if (NOT SAILFISHOS_PLATFORM AND NOT UBUNTU_TOUCH_PLATFORM) 
+if (SAILFISHOS_PLATFORM)
+    set(PLATFORM_SOURCE_DIR "platforms/sailfishos")
+    set(DAEMON_PLATFORM_SOURCE_DIR "platforms/sailfishos")
+elseif (UBUNTU_TOUCH_PLATFORM)
+    set(PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
+    set(DAEMON_PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
+else()
     message(FATAL_ERROR "no platform selected: you must enable either SAILFISHOS_PLATFORM or UBUNTU_TOUCH_PLATFORM")
-endif()
+endif() 
 
 configure_file(
     "asteroidsyncservice_config.h.in"

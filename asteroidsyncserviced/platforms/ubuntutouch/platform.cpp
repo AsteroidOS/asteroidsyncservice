@@ -1,4 +1,4 @@
-#include "ubuntuplatform.h"
+#include "platform.h"
 
 #include <stdlib.h>
 #include <time.h>
@@ -12,7 +12,7 @@
 #include <QJsonArray>
 #include <QUuid>
 
-UbuntuPlatform::UbuntuPlatform(WatchesManager *wm, QObject *parent) : QObject(parent)
+Platform::Platform(WatchesManager *wm, QObject *parent) : QObject(parent)
 {
     // initialize random seed
     std::srand (time(NULL));
@@ -33,26 +33,26 @@ UbuntuPlatform::UbuntuPlatform(WatchesManager *wm, QObject *parent) : QObject(pa
     connect(m_mediaService, SIGNAL(previous()), this, SLOT(onPreviousMusicTitle()));
 }
 
-UbuntuPlatform::~UbuntuPlatform()
+Platform::~Platform()
 {
 }
 
-QDBusInterface *UbuntuPlatform::interface() const
+QDBusInterface *Platform::interface() const
 {
     return m_iface;
 }
 
-void UbuntuPlatform::onNotificationServiceReady()
+void Platform::onNotificationServiceReady()
 {
     m_notificationServiceReady = true;
 }
 
-void UbuntuPlatform::onDisconnected()
+void Platform::onDisconnected()
 {
     m_notificationServiceReady = false;
 }
 
-uint UbuntuPlatform::Notify(const QString &app_name, uint replaces_id, const QString &app_icon, const QString &summary, const QString &body, const QStringList &actions, const QVariantHash &hints, int expire_timeout)
+uint Platform::Notify(const QString &app_name, uint replaces_id, const QString &app_icon, const QString &summary, const QString &body, const QStringList &actions, const QVariantHash &hints, int expire_timeout)
 {
     QStringList hiddenNotifications = {"indicator-sound", "indicator-network"};
     if (!hiddenNotifications.contains(app_name)) {
@@ -69,7 +69,7 @@ uint UbuntuPlatform::Notify(const QString &app_name, uint replaces_id, const QSt
     return 0;
 }
 
-QString UbuntuPlatform::encodeIcon(const QString appName) const
+QString Platform::encodeIcon(const QString appName) const
 {
     if(appName.contains("dekko"))
         return "ios-mail";
@@ -81,7 +81,7 @@ QString UbuntuPlatform::encodeIcon(const QString appName) const
         return "logo-tux";
 }
 
-QString UbuntuPlatform::encodeAppName(const QString appName) const
+QString Platform::encodeAppName(const QString appName) const
 {
     if(appName.contains("dekko"))
         return "Dekko 2";
@@ -95,32 +95,32 @@ QString UbuntuPlatform::encodeAppName(const QString appName) const
         return "unkown";
 }
 
-void UbuntuPlatform::onMediaServiceReady()
+void Platform::onMediaServiceReady()
 {
     setupMusicService();
 }
 
-void UbuntuPlatform::onPreviousMusicTitle()
+void Platform::onPreviousMusicTitle()
 {
     return sendMusicControlCommand("Previous");
 }
 
-void UbuntuPlatform::onNextMusicTitle()
+void Platform::onNextMusicTitle()
 {
     sendMusicControlCommand("Next");
 }
 
-void UbuntuPlatform::onPlayMusicTitle()
+void Platform::onPlayMusicTitle()
 {
     sendMusicControlCommand("Play");
 }
 
-void UbuntuPlatform::onPauseMusicTitle()
+void Platform::onPauseMusicTitle()
 {
     sendMusicControlCommand("Pause");
 }
 
-void UbuntuPlatform::sendMusicControlCommand(QString method)
+void Platform::sendMusicControlCommand(QString method)
 {
     QDBusMessage call = QDBusMessage::createMethodCall(m_mprisService, "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player", method);
     QDBusError err = QDBusConnection::sessionBus().call(call);
@@ -130,7 +130,7 @@ void UbuntuPlatform::sendMusicControlCommand(QString method)
     }
 }
 
-void UbuntuPlatform::setupMusicService()
+void Platform::setupMusicService()
 {
     if (!m_mprisService.isEmpty()) {
         disconnect(this, SLOT(onMprisPropertiesChanged(QString,QVariantMap,QStringList)));
@@ -149,7 +149,7 @@ void UbuntuPlatform::setupMusicService()
     }
 }
 
-void UbuntuPlatform::fetchPropertyAsync(const QString &propertyName)
+void Platform::fetchPropertyAsync(const QString &propertyName)
 {
     if (!m_mprisService.isEmpty()) {
         QDBusMessage call = QDBusMessage::createMethodCall(m_mprisService, "/org/mpris/MediaPlayer2", "org.freedesktop.DBus.Properties", "Get");
@@ -168,7 +168,7 @@ void UbuntuPlatform::fetchPropertyAsync(const QString &propertyName)
     }
 }
 
-void UbuntuPlatform::onMprisPropertiesChanged(const QString &interface, const QVariantMap &changedProps, const QStringList &invalidatedProps)
+void Platform::onMprisPropertiesChanged(const QString &interface, const QVariantMap &changedProps, const QStringList &invalidatedProps)
 {
     Q_UNUSED(interface)
     Q_UNUSED(invalidatedProps)
@@ -181,7 +181,7 @@ void UbuntuPlatform::onMprisPropertiesChanged(const QString &interface, const QV
     }
 }
 
-void UbuntuPlatform::propertyChanged(const QString &propertyName, const QVariant &value)
+void Platform::propertyChanged(const QString &propertyName, const QVariant &value)
 {
     if (propertyName == "Metadata") {
         QVariantMap curMetadata = qdbus_cast<QVariantMap>(value.value<QDBusArgument>());
@@ -194,7 +194,7 @@ void UbuntuPlatform::propertyChanged(const QString &propertyName, const QVariant
     }
 }
 
-void UbuntuPlatform::setArtist(QString artist)
+void Platform::setArtist(QString artist)
 {
     if(artist != m_artist)
     {
@@ -203,7 +203,7 @@ void UbuntuPlatform::setArtist(QString artist)
     }
 }
 
-void UbuntuPlatform::setTitle(QString title)
+void Platform::setTitle(QString title)
 {
     if(title != m_title)
     {
@@ -212,7 +212,7 @@ void UbuntuPlatform::setTitle(QString title)
     }
 }
 
-void UbuntuPlatform::setAlbum(QString album)
+void Platform::setAlbum(QString album)
 {
     if(album != m_album)
     {
@@ -221,7 +221,7 @@ void UbuntuPlatform::setAlbum(QString album)
     }
 }
 
-void UbuntuPlatform::setPlaying(QString playingState)
+void Platform::setPlaying(QString playingState)
 {
     if(playingState != m_playingState)
     {

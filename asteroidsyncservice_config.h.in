@@ -21,7 +21,5 @@
 #define CONFIG_H
 
 #define VERSION "${asteroidsyncservice_VERSION_MAJOR}.${asteroidsyncservice_VERSION_MINOR}"
-#cmakedefine UBUNTU_TOUCH_PLATFORM
-#cmakedefine SAILFISHOS_PLATFORM
 
 #endif // CONFIG_H

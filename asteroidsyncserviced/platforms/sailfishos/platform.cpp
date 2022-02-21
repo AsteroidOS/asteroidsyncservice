@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "platforms/sailfishos/sailfishplatform.h"
+#include "platform.h"
 
 #include "libwatchfish/musiccontroller.h"
 #include "libwatchfish/notificationmonitor.h"
@@ -33,17 +33,17 @@
 #include <QJsonArray>
 #include <QUuid>
 
-SailfishPlatform::SailfishPlatform(WatchesManager *wm, QObject *parent) : QObject(parent)
+Platform::Platform(WatchesManager *wm, QObject *parent) : QObject(parent)
 {
     qDBusRegisterMetaType<QList<QVariantMap>>();
 
     m_timeService = wm->timeService();
     m_wallTimeMonitor = new watchfish::WallTimeMonitor(this);
-    connect(m_wallTimeMonitor, &watchfish::WallTimeMonitor::timeChanged, this, &SailfishPlatform::onTimeChanged);
+    connect(m_wallTimeMonitor, &watchfish::WallTimeMonitor::timeChanged, this, &Platform::onTimeChanged);
 
     m_notificationService = wm->notificationService();
     m_notificationMonitor = new watchfish::NotificationMonitor(this);
-    connect(m_notificationMonitor, &watchfish::NotificationMonitor::notification, this, &SailfishPlatform::newNotification);
+    connect(m_notificationMonitor, &watchfish::NotificationMonitor::notification, this, &Platform::newNotification);
 
     m_mediaService = wm->mediaService();
     m_musicController = new watchfish::MusicController(this);
@@ -57,18 +57,18 @@ SailfishPlatform::SailfishPlatform(WatchesManager *wm, QObject *parent) : QObjec
     connect(m_mediaService, SIGNAL(previous()), m_musicController, SLOT(previous()));
 }
 
-SailfishPlatform::~SailfishPlatform()
+Platform::~Platform()
 {
     delete m_musicController;
     delete m_notificationMonitor;
     delete m_wallTimeMonitor;
 }
 
-void SailfishPlatform::onTimeChanged() {
+void Platform::onTimeChanged() {
     m_timeService->setTime(QDateTime());
 }
 
-void SailfishPlatform::newNotification(watchfish::Notification *notification)
+void Platform::newNotification(watchfish::Notification *notification)
 {
     if (!notification->category().endsWith(".group")) {
         connect(notification, SIGNAL(closed(CloseReason)), this, SLOT(onNotificationClosed(CloseReason)));
@@ -76,28 +76,28 @@ void SailfishPlatform::newNotification(watchfish::Notification *notification)
     }
 }
 
-void SailfishPlatform::onNotificationClosed(watchfish::Notification::CloseReason)
+void Platform::onNotificationClosed(watchfish::Notification::CloseReason)
 {
     watchfish::Notification *notif = (watchfish::Notification *)sender();
     m_notificationService->removeNotification(notif->id());
 }
 
-void SailfishPlatform::updateMusicStatus()
+void Platform::updateMusicStatus()
 {
     m_mediaService->setPlaying(m_musicController->status() == watchfish::MusicController::StatusPlaying);
 }
 
-void SailfishPlatform::updateMusicTitle()
+void Platform::updateMusicTitle()
 {
     m_mediaService->setTitle(m_musicController->title());
 }
 
-void SailfishPlatform::updateMusicAlbum()
+void Platform::updateMusicAlbum()
 {
     m_mediaService->setAlbum(m_musicController->album());
 }
 
-void SailfishPlatform::updateMusicArtist()
+void Platform::updateMusicArtist()
 {
     m_mediaService->setArtist(m_musicController->artist());
 }

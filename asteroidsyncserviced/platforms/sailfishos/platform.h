@@ -17,8 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SAILFISHPLATFORM_H
-#define SAILFISHPLATFORM_H
+#ifndef PLATFORM_H
+#define PLATFORM_H
 
 #include <QDBusContext>
 
@@ -32,14 +32,14 @@
 
 #include "../../watchesmanager.h"
 
-class SailfishPlatform : public QObject, QDBusContext
+class Platform : public QObject, QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Notifications")
 
 public:
-    SailfishPlatform(WatchesManager *wm, QObject *parent = 0);
-    ~SailfishPlatform();
+    Platform(WatchesManager *wm, QObject *parent = 0);
+    ~Platform();
 
 public slots:
     void onTimeChanged();
@@ -62,5 +62,5 @@ private:
     NotificationService *m_notificationService;
 };
 
-#endif // SAILFISHPLATFORM_H
+#endif // PLATFORM_H
 
