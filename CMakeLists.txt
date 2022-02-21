@@ -11,8 +11,11 @@ if (SAILFISHOS_PLATFORM)
 elseif (UBUNTU_TOUCH_PLATFORM)
     set(PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
     set(DAEMON_PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
+elseif (DESKTOP_PLATFORM)
+    set(PLATFORM_SOURCE_DIR "platforms/sailfishos")
+    set(DAEMON_PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
 else()
-    message(FATAL_ERROR "no platform selected: you must enable either SAILFISHOS_PLATFORM or UBUNTU_TOUCH_PLATFORM")
+    message(FATAL_ERROR "no platform selected: you must enable one of SAILFISHOS_PLATFORM or UBUNTU_TOUCH_PLATFORM or DESKTOP_PLATFORM")
 endif() 
 
 configure_file(
