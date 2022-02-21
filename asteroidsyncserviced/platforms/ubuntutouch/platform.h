@@ -1,5 +1,5 @@
-#ifndef UBUNTUPLATFORM_H
-#define UBUNTUPLATFORM_H
+#ifndef PLATFORM_H
+#define PLATFORM_H
 
 #include <QDBusContext>
 
@@ -8,15 +8,15 @@
 #include "../../libasteroid/src/services/timeservice.h"
 #include "../../watchesmanager.h"
 
-class UbuntuPlatform : public QObject, public QDBusContext
+class Platform : public QObject, public QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Notifications")
     Q_PROPERTY(QDBusInterface* interface READ interface)
 
 public:
-    UbuntuPlatform(WatchesManager *wm, QObject *parent = 0);
-    ~UbuntuPlatform();
+    Platform(WatchesManager *wm, QObject *parent = 0);
+    ~Platform();
     QDBusInterface* interface() const;
 
 public slots:
@@ -56,4 +56,4 @@ private:
     QString m_playingState;
 };
 
-#endif // UBUNTUPLATFORM_H
+#endif // PLATFORM_H

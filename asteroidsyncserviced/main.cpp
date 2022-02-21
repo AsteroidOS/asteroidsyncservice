@@ -21,25 +21,14 @@
 #include "asteroidsyncservice_config.h"
 #include "dbusinterface.h"
 #include "watchesmanager.h"
-
-#ifdef UBUNTU_TOUCH_PLATFORM
-#include "platforms/ubuntutouch/ubuntuplatform.h"
-#elif SAILFISHOS_PLATFORM
-#include "platforms/sailfishos/sailfishplatform.h"
-#else
-#error no platform being selected
-#endif
+#include "platform.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
     WatchesManager watchesManager;
-#ifdef UBUNTU_TOUCH_PLATFORM
-    UbuntuPlatform platform(&watchesManager);
-#elif SAILFISHOS_PLATFORM
-    SailfishPlatform platform(&watchesManager);
-#endif
+    Platform platform(&watchesManager);
     DBusInterface dbusInterface(&watchesManager);
 
     return a.exec();
