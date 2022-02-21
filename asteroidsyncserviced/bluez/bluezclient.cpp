@@ -22,8 +22,6 @@
 #include "services/common.h"
 #include "bluezclient_p.h"
 
-#include "bluez_helper.h"
-
 #include <QDBusConnection>
 #include <QDBusReply>
 #include <QDebug>
