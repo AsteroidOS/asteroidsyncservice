@@ -19,7 +19,7 @@
 
 #include "bluezclient.h"
 #include "dbus-shared.h"
-#include "../libasteroid/services/common.h"
+#include "services/common.h"
 
 #include <QDBusConnection>
 #include <QDBusReply>
