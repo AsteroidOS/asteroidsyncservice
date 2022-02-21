@@ -39,14 +39,14 @@ BluezClient::BluezClient(QObject *parent):
     qDBusRegisterMetaType<InterfaceList>();
     qDBusRegisterMetaType<ManagedObjectList>();
 
-    if (d_ptr->m_bluezManager.isValid()) {
-        connect(&d_ptr->m_bluezManager, SIGNAL(InterfacesAdded(QDBusObjectPath,InterfaceList)),
+    if (d_func()->m_bluezManager.isValid()) {
+        connect(&d_func()->m_bluezManager, SIGNAL(InterfacesAdded(QDBusObjectPath,InterfaceList)),
                 this, SLOT(slotInterfacesAdded(QDBusObjectPath,InterfaceList)));
 
-        connect(&d_ptr->m_bluezManager, SIGNAL(InterfacesRemoved(QDBusObjectPath,QStringList)),
+        connect(&d_func()->m_bluezManager, SIGNAL(InterfacesRemoved(QDBusObjectPath,QStringList)),
                 this, SLOT(slotInterfacesRemoved(QDBusObjectPath,QStringList)));
 
-        auto objectList = d_ptr->m_bluezManager.GetManagedObjects().argumentAt<0>();
+        auto objectList = d_func()->m_bluezManager.GetManagedObjects().argumentAt<0>();
         auto iterator = objectList.constBegin();
         while (iterator != objectList.constEnd()) {
             InterfaceList ifaces = iterator.value();
