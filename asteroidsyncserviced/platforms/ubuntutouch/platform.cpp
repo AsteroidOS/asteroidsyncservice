@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QDBusMetaType>
 #include <QDBusReply>
 #include <QDebug>
