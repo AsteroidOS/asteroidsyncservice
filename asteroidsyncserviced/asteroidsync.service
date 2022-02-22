@@ -1,0 +1,12 @@
+[Unit]
+Description=Sync daemon for AsteroidOS smartwatches
+Requires=dbus.socket bluetooth.target
+
+[Service]
+Type=simple
+BusName=org.asteroidsyncservice
+ExecStart=/usr/bin/asteroidsyncserviced
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
