@@ -32,6 +32,7 @@ private slots:
     void onNextMusicTitle();
     void onPlayMusicTitle();
     void onPauseMusicTitle();
+    void onMediaVolumeChange(quint8 vol);
 
 private:
     QDBusInterface *m_iface;
