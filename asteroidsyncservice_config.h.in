@@ -21,5 +21,6 @@
 #define CONFIG_H
 
 #define VERSION "${asteroidsyncservice_VERSION_MAJOR}.${asteroidsyncservice_VERSION_MINOR}"
+#define SYSTEMD_SERVICE_NAME "${SYSTEMD_SERVICE_NAME}"
 
 #endif // CONFIG_H
