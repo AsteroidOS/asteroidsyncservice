@@ -20,10 +20,11 @@
 #ifndef SERVICECONTROL_H
 #define SERVICECONTROL_H
 
+#include "asteroidsyncservice_config.h"
 #include <QDBusInterface>
 #include <QObject>
 
-static const QString SYNCSERVICED_SYSTEMD_UNIT("harbour-asteroidsyncserviced.service");
+static const QString SYNCSERVICED_SYSTEMD_UNIT(SYSTEMD_SERVICE_NAME);
 
 class ServiceControl : public QObject
 {
