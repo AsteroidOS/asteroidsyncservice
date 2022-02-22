@@ -32,6 +32,7 @@ Platform::Platform(WatchesManager *wm, QObject *parent) : QObject(parent)
     connect(m_mediaService, SIGNAL(pause()), this, SLOT(onPauseMusicTitle()));
     connect(m_mediaService, SIGNAL(next()), this, SLOT(onNextMusicTitle()));
     connect(m_mediaService, SIGNAL(previous()), this, SLOT(onPreviousMusicTitle()));
+    connect(m_mediaService, &MediaService::volume, this, &Platform::onMediaVolumeChange);
 }
 
 Platform::~Platform()
@@ -119,6 +120,20 @@ void Platform::onPlayMusicTitle()
 void Platform::onPauseMusicTitle()
 {
     sendMusicControlCommand("Pause");
+}
+
+void Platform::onMediaVolumeChange(quint8 vol)
+{
+    if (!m_mprisService.isEmpty()) {
+        QDBusMessage call = QDBusMessage::createMethodCall(m_mprisService, "/org/mpris/MediaPlayer2", "org.freedesktop.DBus.Properties", "Set");
+        QList<QVariant> args;
+        args << "org.mpris.MediaPlayer2.Player" << "Volume" << QVariant::fromValue(QDBusVariant(vol / 100.0));
+        call.setArguments(args);
+        QDBusError err = QDBusConnection::sessionBus().call(call);
+        if (err.isValid()) {
+            qDebug() << "Error calling mpris method on" << m_mprisService << ":" << err.message();
+        }
+    }
 }
 
 void Platform::sendMusicControlCommand(QString method)
