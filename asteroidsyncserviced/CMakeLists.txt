@@ -18,5 +18,9 @@ target_include_directories(asteroidsyncserviced PRIVATE ${CMAKE_BINARY_DIR} ${DA
 target_link_libraries(asteroidsyncserviced PRIVATE Qt5::Bluetooth Qt5::Core Qt5::DBus Qt5::Qml asteroid)
 install(TARGETS asteroidsyncserviced)
 if (DESKTOP_PLATFORM)
-    install(FILES asteroidsync.service DESTINATION /usr/lib/systemd/user) 
+    configure_file(
+        "asteroidsync.service.in"
+        "asteroidsync.service"
+    )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/asteroidsync.service DESTINATION /usr/lib/systemd/user) 
 endif()
