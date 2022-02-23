@@ -21,6 +21,8 @@ else()
     message(FATAL_ERROR "no platform selected: you must enable one of SAILFISHOS_PLATFORM or UBUNTU_TOUCH_PLATFORM or DESKTOP_PLATFORM")
 endif() 
 
+include(GNUInstallDirs)
+
 configure_file(
     "asteroidsyncservice_config.h.in"
     "asteroidsyncservice_config.h"

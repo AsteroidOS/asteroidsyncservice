@@ -5,7 +5,7 @@ Requires=dbus.socket bluetooth.target
 [Service]
 Type=simple
 BusName=org.asteroidsyncservice
-ExecStart=/usr/bin/asteroidsyncserviced
+ExecStart=${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/asteroidsyncserviced
 Restart=no
 
 [Install]
