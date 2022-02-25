@@ -11,7 +11,10 @@ This software uses CMake and Qt, including Bluetooth support.  Installing these 
 
   - `sudo apt-get install qtconnectivity5-dev`
 
+If you intend to build the optional project documentation, you will also need Doxygen, dot, and plantuml.
+
 ### Get the code
+
 To build asteroidsyncservice, all submodules must be loaded.
 
   - `git submodule update --init`
@@ -54,7 +57,7 @@ The `-t` option tells CMake the build target that we want.  In this case the tar
 
 ### Building developer documentation (optional)
 
-To build the documentation for the project in either HTML or PDF format requires an additional option for the "pPrepare the build" step listed above.  The setting is `WITH_DOC` which is set to `OFF` by default, but can be turned on:
+This project provides developer documentation in the HTML or PDF format. This is disabled by default. One can enable the generation of the documentation by adding an option during the "Prepare the build" steps listed above like this:
 
 ```
 cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=ON -DDESKTOP_PLATFORM=ON -S . -B build
@@ -66,7 +69,7 @@ After the build is prepared, one can build the documentation from the top level 
 cmake --build build -j -t doc
 ``` 
 
-This builds the software documentation in html format, the software is built in the `build/doc/html` subdirectory.  So to view the documents using Firefox, for example, one can use the command `firefox build/doc/html/index.html` which will load the main page.  Of course any browser can be used, and not just Firefox.
+This builds the software documentation in HTML format.  The main page for that documentation is `build/doc/html/index.html`
 
 One can also create a pdf file with the same content.  This is done using this command:
 
