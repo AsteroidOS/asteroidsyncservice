@@ -8,6 +8,11 @@ if(DOXYGEN_FOUND)
         "doxygen.conf"
         @ONLY
     )
+    configure_file(
+        "asteroid-logo.svg"
+        "asteroid-logo.svg"
+        COPYONLY
+    )
     add_custom_target(
         doc
         "${DOXYGEN_EXECUTABLE}"
