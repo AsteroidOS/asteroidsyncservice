@@ -51,7 +51,7 @@ PROJECT_BRIEF          = @PROJECT_DESCRIPTION@
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           =
+PROJECT_LOGO           = asteroid-logo.svg
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -239,7 +239,8 @@ TAB_SIZE               = 4
 # newlines (in the resulting output). You can put ^^ in the value part of an
 # alias to insert a newline as if a physical newline was in the original file.
 
-ALIASES                =
+ALIASES = footnote{1}="\latexonly\footnote\{\1\}\endlatexonly\htmlonly<sup title=\"\1\">*</sup>\endhtmlonly"
+
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"
@@ -2411,7 +2412,7 @@ DIAFILE_DIRS           =
 # generate a warning when it encounters a \startuml command in this case and
 # will not generate output for the diagram.
 
-PLANTUML_JAR_PATH      =
+PLANTUML_JAR_PATH      = @PLANTUML_JAR_PATH@
 
 # When using plantuml, the PLANTUML_CFG_FILE tag can be used to specify a
 # configuration file for plantuml.

@@ -1,6 +1,7 @@
 find_package(Doxygen)
-set(MD_SOURCES 01_intro.md )
+set(MD_SOURCES 01_intro.md 02_architecture.md 03_dbus.md 99_glossary.md )
 # Add API Reference generation
+set(PLANTUML_JAR_PATH "/usr/share/java/plantuml.jar")
 if(DOXYGEN_FOUND)
     configure_file(
         "doxygen.conf.in"
