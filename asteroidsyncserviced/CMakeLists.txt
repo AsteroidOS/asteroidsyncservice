@@ -42,7 +42,7 @@ add_executable(asteroidsyncserviced
 set_target_properties(asteroidsyncserviced PROPERTIES AUTOMOC ON)
 target_compile_features(asteroidsyncserviced PUBLIC cxx_std_17)
 add_compile_definitions(Q_DECLARE_PRIVATE_SUPPORTS_UNIQUE_PTR=${Q_DECLARE_PRIVATE_SUPPORTS_UNIQUE_PTR})
-target_include_directories(asteroidsyncserviced PRIVATE ${CMAKE_BINARY_DIR} ${DAEMON_PLATFORM_SOURCE_DIR} libasteroid/src bluez)
+target_include_directories(asteroidsyncserviced PRIVATE ${PROJECT_BINARY_DIR} ${DAEMON_PLATFORM_SOURCE_DIR} libasteroid/src bluez)
 target_link_libraries(asteroidsyncserviced PRIVATE Qt5::Bluetooth Qt5::Core Qt5::DBus Qt5::Qml asteroid)
 install(TARGETS asteroidsyncserviced)
 if (DESKTOP_PLATFORM)
