@@ -1,13 +1,19 @@
 # Software Architecture {#architecture} #
-As mentioned in [Introduction](@ref mainpage), the `asteroidsyncservice` is just one component of a synchronization client.  This section describes a whole synchronization and shows how this software fits into the overall picture.  This project is intended to be used by a [QML](https://doc.qt.io/qt-5/qmlapplications.html) application without the application needing to know about the details of this software.  The `asteroidsyncservice` contains two major components: a QML plugin and a daemon that it interacts with.  
+As mentioned in the [Introduction](@ref mainpage), `asteroidsyncservice` is just one component of a synchronization client.  This section describes a whole synchronization and shows how this software fits into the overall picture.  This project is intended to be used by a [QML](https://doc.qt.io/qt-5/qmlapplications.html) application without the application needing to know about the details of this software.  This project contains two major components: a QML plugin named `asteroidsyncserviceplugin` and a daemon with which it interacts named `asteroidsyncserviced`.  
 
 \startuml
 [QML app]
 package "asteroidsyncservice" {
-    [QML plugin] - qml
+    [asteroidsyncserviceplugin] - qml
+    note left of [asteroidsyncserviceplugin]
+        the QML plugin
+    end note
     [QML app] --> qml
-    [daemon] - dbus
-    [QML plugin] --> dbus
+    [asteroidsyncserviced] - dbus
+    note left of [asteroidsyncserviced]
+        the daemon
+    end note
+    [asteroidsyncserviceplugin] --> dbus
 }
 [system] 
 dbus --> [system]
@@ -23,7 +29,7 @@ ServiceController {
 }
 ```
 
-In the SyncServicePlugin::registerTypes function, the plugin exports three types: Watch, Watches and ServiceControl which is exported to QML as `ServiceController` as shown above.  Once the `ServiceController` is started, the Watches collection of Watch objects may be used to interact with a selected watch.
+In the `SyncServicePlugin::registerTypes` function, the plugin exports three types: `Watch`, `Watches` and `ServiceControl` which is exported to QML as `ServiceController` as shown above.  Once the `ServiceController` is started, the `Watches` collection of `Watch` objects may be used to interact with a selected watch.
 
 Consult the details of those classes to read about the signals and properties that are available to a QML application.
 
