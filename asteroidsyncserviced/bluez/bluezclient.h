@@ -57,6 +57,9 @@ signals:
 
 private:
     bool isAsteroidOSWatch(const QStringList uuids) const;
+#if Q_DECLARE_PRIVATE_SUPPORTS_UNIQUE_PTR != 1
+template <typename Wrapper> static inline typename Wrapper::pointer qGetPtrHelper(const Wrapper &p) { return p.operator->(); }
+#endif
     Q_DECLARE_PRIVATE(BluezClient);
     std::unique_ptr<BluezClientPrivate> d_ptr;
     QHash<QString, Device> m_devices;

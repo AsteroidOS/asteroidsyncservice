@@ -5,27 +5,76 @@ asteroidsyncserviced is a daemon relying on libasteroid to synchronize data from
 
 ## Building
 
+### Install the prerequisites
+
+This software uses CMake and Qt, including Bluetooth support.  Installing these varies by system, but for example on many Linux distributions, one can install the latter with this command:
+
+  - `sudo apt-get install qtconnectivity5-dev`
+
+If you intend to build the optional project documentation, you will also need Doxygen, dot, and plantuml.
+
+### Get the code
+
 To build asteroidsyncservice, all submodules must be loaded.
 
   - `git submodule update --init`
 
-Current qmake build configuration options:
+### Prepare the build
 
-  - `Starship: CONFIG+=starship`
-  - `Telescope: CONFIG+=telescope`
+The software is built using CMake.  Exactly one platform must be specified to build the project.  Currently the supported platforms are:
 
-Install bluetooth
+ - SAILFISHOS_PLATFORM
+ - UBUNTU_TOUCH_PLATFORM
+ - DESKTOP_PLATFORM
 
-  - `sudo apt-get install qtconnectivity5-dev`
+To prepare to build the software, if you are in the top level directory, one can use this command to prepare the build.
 
-Create build dir
+```
+cmake -DCMAKE_BUILD_TYPE=Release -DDESKTOP_PLATFORM=ON -S . -B build
+```
 
-  - `mkdir build && cd build`
+This will set up the software to create a Release version of the software (as contrasted with a Debug version) and put this in a newly created `build` subdirectory.
 
-Run qmake:
+### Build the software
 
-  - `qmake -makefile -o Makefile "CONFIG+=telescope" ../asteroidsyncservice.pro`
+Again from the top level directory, one can use cmake to build the software.
 
-Run make:
+```
+cmake --build build -j
+```
 
-  - `make`
+This will build the software in the build directory.  The `-j` suffix asks the build to be performed in parallel, which can make the build go much faster on a multicore build machine.  
+
+### Install the software (optional)
+
+Installing the software generally required root access and is presently supported only for the DESKTOP_PLATFORM option.  
+
+```
+sudo cmake --build build -j -t install
+```
+
+The `-t` option tells CMake the build target that we want.  In this case the target is named `install`. 
+
+### Building developer documentation (optional)
+
+This project provides developer documentation in the HTML or PDF format. This is disabled by default. One can enable the generation of the documentation by adding an option during the "Prepare the build" steps listed above like this:
+
+```
+cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=ON -DDESKTOP_PLATFORM=ON -S . -B build
+```
+
+After the build is prepared, one can build the documentation from the top level directory:
+
+```
+cmake --build build -j -t doc
+``` 
+
+This builds the software documentation in HTML format.  The main page for that documentation is `build/doc/html/index.html`
+
+One can also create a pdf file with the same content.  This is done using this command:
+
+```
+cmake --build build -j -t pdf
+``` 
+
+The PDF file is then created as `build/doc/latex/refman.pdf`.
