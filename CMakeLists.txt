@@ -1,19 +1,25 @@
 cmake_minimum_required(VERSION 3.15)
-project(asteroidsyncservice VERSION 1.0.0)
+project(asteroidsyncservice VERSION 1.0.0 
+    DESCRIPTION "A synchronization daemon for AsteroidOS watches"
+)
 
 # options off-by-default that you can enable
 option(SAILFISHOS_PLATFORM "Build the project for the SailfishOS platform" OFF)
 option(UBUNTU_TOUCH_PLATFORM "Build the project for the Ubuntu Touch platform" OFF)
+option(WITH_DOC "Create project documentation" OFF)
 
 if (SAILFISHOS_PLATFORM)
     set(PLATFORM_SOURCE_DIR "platforms/sailfishos")
     set(DAEMON_PLATFORM_SOURCE_DIR "platforms/sailfishos")
+    set(SERVICE_NAME "harbour-asteroidsyncserviced.service")
 elseif (UBUNTU_TOUCH_PLATFORM)
     set(PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
     set(DAEMON_PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
+    set(SERVICE_NAME "")
 elseif (DESKTOP_PLATFORM)
     set(PLATFORM_SOURCE_DIR "platforms/sailfishos")
     set(DAEMON_PLATFORM_SOURCE_DIR "platforms/ubuntutouch")
+    set(SERVICE_NAME "asteroidsync.service")
 else()
     message(FATAL_ERROR "no platform selected: you must enable one of SAILFISHOS_PLATFORM or UBUNTU_TOUCH_PLATFORM or DESKTOP_PLATFORM")
 endif() 
@@ -24,6 +30,9 @@ configure_file(
 )
 add_subdirectory(asteroidsyncservice)
 add_subdirectory(asteroidsyncserviced)
+if (WITH_DOC)
+    add_subdirectory(doc)
+endif()
 # add config file 
 # OTHER_FILES += \
  #   README.md \
