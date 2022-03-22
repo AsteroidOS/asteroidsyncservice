@@ -24,7 +24,7 @@
 #include <QDBusInterface>
 #include <QObject>
 
-static const QString SYNCSERVICED_SYSTEMD_UNIT(SERVICE_NAME);
+static const QString SYNCSERVICED_SYSTEMD_UNIT(SYSTEMD_SERVICE_NAME);
 
 class ServiceControl : public QObject
 {
