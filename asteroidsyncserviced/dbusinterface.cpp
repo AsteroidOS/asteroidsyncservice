@@ -119,14 +119,9 @@ void DBusWatch::SetTime(QDateTime t)
     m_timeService->setTime(t);
 }
 
-void DBusWatch::SetVibration(QString v)
+void DBusWatch::SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary, QString vibration)
 {
-    m_notificationService->setVibration(v);
-}
-
-void DBusWatch::SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary)
-{
-    m_notificationService->insertNotification("", id, appName, icon, body, summary, NotificationService::Strong);
+    m_notificationService->insertNotification("", id, appName, icon, body, summary, vibration);
 }
 
 void DBusWatch::onScreenshotServiceReady()
