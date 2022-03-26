@@ -62,7 +62,7 @@ uint Platform::Notify(const QString &app_name, uint replaces_id, const QString &
             qDebug() << __func__ << "Have a phone call notification. Ignoring it..." << app_name << app_icon;
         } else if(m_notificationServiceReady) {
             unsigned int randId = rand() % 100000 + 1;
-            m_notificationService->insertNotification("", randId, encodeAppName(app_name), encodeIcon(app_name), summary, body, m_notificationService->getVibration());
+            m_notificationService->insertNotification("", randId, encodeAppName(app_name), encodeIcon(app_name), summary, body, "normal");
         } else {
             qDebug() << __func__ << "Service not ready";
         }
