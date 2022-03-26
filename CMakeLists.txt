@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(asteroidsyncservice VERSION 1.0.0 
+project(asteroidsyncservice VERSION 2.0.0 
     DESCRIPTION "A synchronization daemon for AsteroidOS watches"
 )
 
