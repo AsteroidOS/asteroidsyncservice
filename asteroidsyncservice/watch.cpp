@@ -134,9 +134,9 @@ void Watch::setVibration(QString v)
     m_iface->call("SetVibration", v);
 }
 
-void Watch::sendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary)
+void Watch::sendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary, QString vibration)
 {
-    m_iface->call("SendNotify", id, appName, icon, body, summary);
+    m_iface->call("SendNotify", id, appName, icon, body, summary, vibration);
 }
 
 bool Watch::screenshotServiceReady()
