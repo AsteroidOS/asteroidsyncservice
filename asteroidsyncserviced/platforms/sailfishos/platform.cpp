@@ -72,7 +72,7 @@ void Platform::newNotification(watchfish::Notification *notification)
 {
     if (!notification->category().endsWith(".group")) {
         connect(notification, SIGNAL(closed(CloseReason)), this, SLOT(onNotificationClosed(CloseReason)));
-        m_notificationService->insertNotification(notification->appId(), notification->id(), notification->appName(), "ios-mail", notification->summary(), notification->body(), NotificationService::Strong);
+        m_notificationService->insertNotification(notification->appId(), notification->id(), notification->appName(), "ios-mail", notification->summary(), notification->body(), "strong");
     }
 }
 
