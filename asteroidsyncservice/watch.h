@@ -97,6 +97,7 @@ private:
     unsigned int m_scrnProgress = 0;
     QFileInfo m_screenshotFileInfo;
     QString m_screenshotName;
+    QString m_weatherCityName;
 };
 
 #endif // WATCH_H
