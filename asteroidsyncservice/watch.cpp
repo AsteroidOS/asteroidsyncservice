@@ -59,12 +59,13 @@ QString Watch::name()
 
 QString Watch::weatherCityName()
 {
-    return ""; // TODO
+    return m_weatherCityName; 
 }
 
 void Watch::setWeatherCityName(const QString &c)
 {
     m_iface->call("WeatherSetCityName", c);
+    m_weatherCityName = c;
     emit weatherCityNameChanged();
 }
 
