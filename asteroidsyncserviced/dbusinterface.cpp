@@ -36,7 +36,7 @@ DBusWatch::DBusWatch(Watch *watch, WatchesManager* wm, QObject *parent): QObject
     m_timeService = wm->timeService();
     m_notificationService = wm->notificationService();
 
-    connect(m_batteryService, SIGNAL(ready()), this, SIGNAL(BatteryServiceReady()));    
+    connect(m_batteryService, SIGNAL(ready()), this, SIGNAL(BatteryServiceReady()));
     connect(m_batteryService, SIGNAL(levelChanged(quint8)), this, SIGNAL(LevelChanged(quint8)));
     connect(m_timeService, SIGNAL(ready()), this, SLOT(onTimeServiceReady()));
     connect(m_notificationService, SIGNAL(ready()), this, SLOT(onNotifyServiceReady()));
