@@ -60,6 +60,7 @@ public slots:
     bool StatusWeatherService();
     void RequestScreenshot();
     void WeatherSetCityName(QString cityName);
+    void WeatherSetWeather(QString weatherJson);
     void SetTime(QDateTime t);
     void SendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary, QString vibration);
 
