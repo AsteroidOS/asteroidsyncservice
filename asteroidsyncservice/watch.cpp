@@ -140,6 +140,11 @@ void Watch::sendNotify(unsigned int id, QString appName, QString icon, QString b
     m_iface->call("SendNotify", id, appName, icon, body, summary, vibration);
 }
 
+void Watch::updateWeather(QString weatherJson)
+{
+    m_iface->call("WeatherSetWeather", weatherJson);
+}
+
 bool Watch::screenshotServiceReady()
 {
     return fetchProperty("StatusScreenshotService").toBool();
