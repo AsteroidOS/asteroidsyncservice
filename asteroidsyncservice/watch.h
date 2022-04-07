@@ -59,6 +59,7 @@ public:
     bool notificationServiceReady();
     Q_INVOKABLE void setVibration(QString v);
     Q_INVOKABLE void sendNotify(unsigned int id, QString appName, QString icon, QString body, QString summary, QString vibration);
+    Q_INVOKABLE void updateWeather(QString weatherJson);
     bool weatherServiceReady();
 
 public slots:
