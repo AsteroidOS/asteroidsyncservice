@@ -25,6 +25,44 @@
 
 #include <QDBusConnection>
 #include <QDebug>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QJsonObject>
+
+#include <algorithm>
+
+/*!
+ * \brief Convert JSON weather string to QList<WeatherDay>
+ *
+ * \param weatherJson String containing weather JSON.  An example of the
+ * minimum acceptable string: 
+ *   '{"daily":[
+ *      {"temp":{"min":289.19,"max":298.9}},{"weather":[{"id":800}]},
+ *      {"temp":{"min":290.25,"max":300.2}},{"weather":[{"id":800}]}
+ *    ]}'
+ *  see https://openweathermap.org/api/one-call-api for full spec
+ */
+static QList<WeatherDay> parseWeatherJson(const QString &weatherJson)
+{
+    constexpr int maxWeatherDays{5};
+    QList<WeatherDay> weatherDays;
+    QJsonParseError parseError;
+    auto json = QJsonDocument::fromJson(weatherJson.toUtf8(), &parseError);
+    if (json.isNull()) {
+        qWarning() << "JSON parse error:  " << parseError.errorString();
+    }
+    auto daily = json["daily"].toArray();
+    int count = std::min(maxWeatherDays, daily.count());
+    for (int i = 0; i < count; ++i) {
+        auto day = daily.at(i).toObject();
+        short low = day["temp"].toObject()["min"].toDouble();
+        short high = day["temp"].toObject()["max"].toDouble();
+        short icon = day["weather"].toArray()[0].toObject()["id"].toInt();
+        weatherDays.push_back({icon, low, high});
+    }
+    return weatherDays;
+}
 
 /* Watch Interface */
 
@@ -90,6 +128,14 @@ void DBusWatch::RequestScreenshot()
 void DBusWatch::WeatherSetCityName(QString cityName)
 {
     m_weatherService->setCity(cityName);
+}
+
+void DBusWatch::WeatherSetWeather(QString weatherJson)
+{
+    QList<WeatherDay> weatherDays = parseWeatherJson(weatherJson);
+    auto wds = QVariant::fromValue<QList<WeatherDay>>(weatherDays);
+    
+    m_weatherService->setWeatherDays(weatherDays);
 }
 
 void DBusWatch::onTimeServiceReady()
