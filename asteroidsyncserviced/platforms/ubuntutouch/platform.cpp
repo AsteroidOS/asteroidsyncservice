@@ -114,7 +114,7 @@ void Platform::onNextMusicTitle()
 
 void Platform::onPlayMusicTitle()
 {
-    sendMusicControlCommand("Play");
+    sendMusicControlCommand("PlayPause");
 }
 
 void Platform::onPauseMusicTitle()
