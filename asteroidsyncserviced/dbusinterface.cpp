@@ -31,6 +31,7 @@
 #include <QJsonObject>
 
 #include <algorithm>
+#include <utility>
 
 /*!
  * \brief Convert JSON weather string to QList<WeatherDay>
@@ -45,7 +46,12 @@
  */
 static QList<WeatherDay> parseWeatherJson(const QString &weatherJson)
 {
-    constexpr int maxWeatherDays{5};
+    /* This looks complex, but it's really just a way to compensate for the fact
+     * that with Qt5, size() returned an int, and with Qt6, it returns a qsizetype.
+     * This automatically determines the type so the comparison within std::min()
+     * below does not trigger a compiler warning.
+     */
+    static constexpr decltype(std::declval<QJsonArray>().size()) maxWeatherDays{5};
     QList<WeatherDay> weatherDays;
     QJsonParseError parseError;
     auto json = QJsonDocument::fromJson(weatherJson.toUtf8(), &parseError);
