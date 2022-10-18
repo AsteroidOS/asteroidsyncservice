@@ -177,7 +177,7 @@ void Watch::setScreenshotFileInfo(const QString fileInfo)
     QFileInfo fInfo(fileInfo);
     if(!createDir(fInfo.dir()))
         qDebug() << "Unable to create directory";
-    m_screenshotFileInfo = fileInfo;
+    m_screenshotFileInfo = fInfo;
 }
 
 bool Watch::createDir(const QDir path)
