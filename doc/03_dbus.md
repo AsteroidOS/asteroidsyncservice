@@ -14,5 +14,6 @@ On all platforms, BlueZ uses D-Bus to send messages to `asteroidsyncservice`.  S
 ## Further reading ##
 
 - [Introduction](@ref mainpage)
+- [D-Bus interface](@ref daemon)
 - [Software Architecture](@ref architecture)
 - [Glossary](@ref glossary)

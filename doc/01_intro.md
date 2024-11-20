@@ -33,5 +33,6 @@ Platform -> media_player : use D-bus to set volume
 That is a very quick introduction to generally how the `asteroidsyncservice` software works.  Here are links for more details:
 
 - [Software Architecture](@ref architecture)
+- [D-Bus interface](@ref daemon)
 - [Understanding D-Bus](@ref dbus)
 - [Glossary](@ref glossary)

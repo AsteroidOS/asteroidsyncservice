@@ -41,5 +41,6 @@ Similarly, the daemon uses D-Bus to interact with other software (such as a medi
 ## Further reading ##
 
 - [Introduction](@ref mainpage)
+- [D-Bus interface](@ref daemon)
 - [Understanding D-Bus](@ref dbus)
 - [Glossary](@ref glossary)
