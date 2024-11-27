@@ -30,7 +30,7 @@ bool ServiceControl::serviceFileInstalled() const
         qDebug() << "Service name not set.";
         return false;
     }
-    QFile f(QDir::homePath() + "/.config/upstart/" + m_serviceName + ".conf");
+    QFile f(QDir::homePath() + "/.config/systemd/user/"+ m_serviceName + ".service");
     return f.exists();
 }
 
@@ -41,7 +41,7 @@ bool ServiceControl::installServiceFile()
         return false;
     }
 
-    QFile f(QDir::homePath() + "/.config/upstart/" + m_serviceName + ".conf");
+    QFile f(QDir::homePath() + "/.config/systemd/user/"+ m_serviceName + ".service");
     if (f.exists()) {
         qDebug() << "Service file already existing...";
         return false;
@@ -56,11 +56,20 @@ bool ServiceControl::installServiceFile()
     // Try to replace version with "current" to be more robust against updates
     appDir.replace(QRegExp("[0-9].[0-9].[0-9]"), "current");
 
-    f.write("start on started unity8\n");
-    f.write("pre-start script\n");
-    f.write("   initctl set-env LD_LIBRARY_PATH=" + appDir.toUtf8() + "/usr/bin/../:$LD_LIBRARY_PATH\n");
-    f.write("end script\n");
-    f.write("exec " + appDir.toUtf8() + "/usr/bin/" + m_serviceName.toUtf8() + "\n");
+    f.write("[Unit]\n");
+    f.write("Description=asteroidsync\n");
+    f.write("After=graphical.target\n");
+    f.write("[Service]\n");
+    f.write("ExecStart=" + appDir.toUtf8() + "/usr/bin/" + m_serviceName.toUtf8() + "\n");
+
+    f.write("Restart=always\n");
+    f.write("RestartSec=5\n");
+    f.write("Environment=LD_LIBRARY_PATH=" + appDir.toUtf8() + "/usr/bin/../:$LD_LIBRARY_PATH\n");
+    f.write("Environment=HOME=%h XDG_CONFIG_HOME=/home/%u/.config DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus XDG_RUNTIME_DIR=/run/user/%U\n");
+    f.write("[Install]\n");
+    f.write("WantedBy=default.target\n");
+
+
     f.close();
     return true;
 }
@@ -71,18 +80,18 @@ bool ServiceControl::removeServiceFile()
         qDebug() << "Service name not set.";
         return false;
     }
-    QFile f(QDir::homePath() + "/.config/upstart/" + m_serviceName + ".conf");
+    QFile f(QDir::homePath() + "/.config/systemd/user/"+ m_serviceName + ".service");
     return f.remove();
 }
 
 bool ServiceControl::serviceRunning() const
 {
     QProcess p;
-    p.start("initctl", {"status", m_serviceName});
+    p.start("systemctl", {"is-active", "--user", m_serviceName});
     p.waitForFinished();
     QByteArray output = p.readAll();
     qDebug() << output;
-    return output.contains("running");
+    return output.contains("active");
 }
 
 bool ServiceControl::setServiceRunning(bool running)
@@ -97,21 +106,21 @@ bool ServiceControl::setServiceRunning(bool running)
 
 bool ServiceControl::startService()
 {
-    qDebug() << "start service";
-    int ret = QProcess::execute("start", {m_serviceName});
+    int ret = QProcess::execute("systemctl", {"start", "--user", m_serviceName});
+    qDebug() << "start service" << ret;
     return ret == 0;
 }
 
 bool ServiceControl::stopService()
 {
-    qDebug() << "stop service";
-    int ret = QProcess::execute("stop", {m_serviceName});
+    int ret = QProcess::execute("systemctl", {"stop", "--user", m_serviceName});
+    qDebug() << "stop service" << ret;
     return ret == 0;
 }
 
 bool ServiceControl::restartService()
 {
-    qDebug() << "restart service";
-    int ret = QProcess::execute("restart", {m_serviceName});
+    int ret = QProcess::execute("systemctl", {"restart", "--user", m_serviceName});
+    qDebug() << "restart service" << ret;
     return ret == 0;
 }
